@@ -1,0 +1,165 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddressDTO {
+  addressLineOne: String!
+  city: String!
+  country: String!
+  description: String!
+  home: String!
+  postal_code: String!
+  region: String!
+  street: String!
+}
+
+type AddressModel {
+  addressLineOne: String!
+  city: String!
+  country: String!
+  description: String!
+  home: String!
+  postal_code: String!
+  region: String!
+  street: String!
+}
+
+type AddressSegmentsModel {
+  city: String!
+  country: String!
+  home: String!
+  postal_code: String!
+  region: String!
+  street: String!
+}
+
+type AddressesModel {
+  description: String!
+  place_id: ID!
+}
+
+type AdminModel {
+  _id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  roles: [String!]!
+  status: String
+}
+
+type AggregatedPropertyModel {
+  _id: ID!
+  address: AddressModel!
+  managerIds: [ID!]!
+  managers: [UserModel!]!
+  portfolio: PropertyPortfolioModel!
+  portfolioId: ID!
+  type: PropertyTypesModel!
+  typeId: ID!
+  units: Float!
+}
+
+input CreatePropertyDTO {
+  address: AddressDTO!
+  managerIds: [ID!]!
+  portfolio: String!
+  type: String!
+  units: Float!
+}
+
+input ICreateAdminDTO {
+  email: String!
+  firstName: String!
+  lastName: String!
+  role: String!
+  temporaryPassword: String!
+}
+
+input IEditAdminDTO {
+  _id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String
+  role: String!
+  status: String!
+}
+
+input ILoginAdminDTO {
+  email: String!
+  pass: String!
+}
+
+input ILoginClientDTO {
+  email: String!
+  pass: String!
+}
+
+type LoginAdminModel {
+  _id: ID!
+  accessToken: String!
+  email: String!
+  firstName: String
+  lastName: String
+  roles: [String!]!
+  status: String
+}
+
+type Mutation {
+  createAdmin(file: Upload, input: ICreateAdminDTO!): Boolean
+  createProperty(files: [Upload!], input: CreatePropertyDTO!): Boolean!
+  editAdmin(input: IEditAdminDTO!): Boolean!
+  loginAdmin(input: ILoginAdminDTO!): LoginAdminModel!
+  loginClient(input: ILoginClientDTO!): Boolean!
+}
+
+type PropertyGroupedByStateModel {
+  _id: ID!
+  cities: [String!]!
+  images: [PropertyPhoto!]!
+  propertyIds: [ID!]!
+}
+
+type PropertyPhoto {
+  _id: ID!
+  bucket: String!
+  eTag: String!
+  key: String!
+  propertyId: ID!
+  url: String!
+}
+
+type PropertyPortfolioModel {
+  _id: ID!
+  name: String!
+}
+
+type PropertyTypesModel {
+  _id: ID!
+  name: String!
+}
+
+type Query {
+  getAddressGeocode(query: String!): AddressSegmentsModel
+  getAddresses(query: String!): [AddressesModel!]!
+  getAdmins: [AdminModel!]!
+  getAggregatedProperties: [AggregatedPropertyModel!]!
+  getManagers: [AdminModel!]!
+  getPropertiesByQuery(query: String!): Boolean!
+  getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!
+  getPropertyPortfolios(query: String): [PropertyPortfolioModel!]!
+  getPropertyTypes(query: String): [PropertyTypesModel!]!
+  getRoot: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UserModel {
+  _id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  roles: [String!]!
+  status: String
+}
