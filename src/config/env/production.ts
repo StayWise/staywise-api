@@ -30,9 +30,21 @@ const config = {
             region: process.env.AWS_DEFAULT_REGION,
         }
     },
-    port: process.env.PORT || 3001,
+    google: {
+        placesAPI: {
+            baseURL: "https://maps.googleapis.com/maps/api/place",
+            apiKey: process.env.GOOGLE_MAPS_API_KEY,
+        },
+        geocodeAPI: {
+            baseURL: "https://maps.googleapis.com/maps/api/geocode",
+            apiKey: process.env.GOOGLE_MAPS_API_KEY
+        }
+    },
+    port: process.env.PORT || 3000,
     origin: {
         whitelist: [
+            "https://admin.staywiserental.com",
+            "https://www.staywiserental.com",
             "http://localhost",
         ]
     },
