@@ -1,4 +1,4 @@
-FROM node:16.13.0-alpine AS development
+FROM public.ecr.aws/bitnami/node:latest AS development
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:16.13.0-alpine as production
+FROM public.ecr.aws/bitnami/node:latest as production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
