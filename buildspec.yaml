@@ -1,61 +1,19 @@
 version: 0.2
-
-env:
-  variables:
-    NODE_ENV: "production"
-     # key: "value"
-  #parameter-store:
-     # key: "value"
-     # key: "value"
-  #secrets-manager:
-     # key: secret-id:json-key:version-stage:version-id
-     # key: secret-id:json-key:version-stage:version-id
-  #exported-variables:
-     # - variable
-     # - variable
-  #git-credential-helper: yes
-#batch:
-  #fast-fail: true
-  #build-list:
-  #build-matrix:
-  #build-graph:
 phases:
-  #install:
-    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
-    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
-    #runtime-versions:
-      # name: version
-      # name: version
-    #commands:
-      # - command
-      # - command
   pre_build:
     commands:
-      npm install
-      # - command
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      npm run build
-      # - command
-  #post_build:
-    #commands:
-      # - command
-      # - command
-#reports:
-  #report-name-or-arn:
-    #files:
-      # - location
-      # - location
-    #base-directory: location
-    #discard-paths: yes
-    #file-format: JunitXml | CucumberJson
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker-compose --file=docker-compose.build.yml build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker-compose --file=docker-compose.build.yml push
 artifacts:
   files:
-    - '**/*'
-    # - location
-  #name: $(date +%Y-%m-%d)
-  #discard-paths: yes
-  #base-directory: location
-#cache:
-  #paths:
-    # - paths
+    - 'docker-compose.yml'
