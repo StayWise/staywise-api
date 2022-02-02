@@ -43,10 +43,9 @@ const config = {
     port: process.env.PORT || 3000,
     origin: {
         whitelist: [
-            "http://api.staywiserent.com/",
-            "https://api.staywiserent.com/",
-            "https://admin.staywiserental.com",
-            "https://www.staywiserental.com",
+            "https://api.staywiserent.com",
+            "https://admin.staywiserent.com",
+            "https://www.staywiserent.com",
             "http://localhost",
         ]
     },
