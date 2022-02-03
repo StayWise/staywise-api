@@ -1,6 +1,8 @@
 export const propertiesByQueryAggregation = (query:string) => {
-    return [
-        {
+    const pipeline = [];
+
+    if (query) { 
+        pipeline.push({
             $search: {
                 index: "property-search",
                 compound: {
@@ -23,6 +25,12 @@ export const propertiesByQueryAggregation = (query:string) => {
                     minimumShouldMatch: 1
                 }
             }
-        }
-    ]
+        })
+    }
+
+    pipeline.push({
+        $limit: 75,
+    })
+
+    return pipeline; 
 }

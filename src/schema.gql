@@ -107,10 +107,23 @@ type LoginAdminModel {
 
 type Mutation {
   createAdmin(file: Upload, input: ICreateAdminDTO!): Boolean
+  createNewTenantRequest(input: NewTenantRequestFormDTO!): Boolean!
   createProperty(files: [Upload!], input: CreatePropertyDTO!): Boolean!
   editAdmin(input: IEditAdminDTO!): Boolean!
   loginAdmin(input: ILoginAdminDTO!): LoginAdminModel!
   loginClient(input: ILoginClientDTO!): Boolean!
+}
+
+input NewTenantRequestFormDTO {
+  additionalInfo: String = ""
+  address: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  propertyAddress: String!
+  propertyId: ID!
+  requiredBy: String!
 }
 
 type PropertyGroupedByStateModel {
@@ -118,6 +131,15 @@ type PropertyGroupedByStateModel {
   cities: [String!]!
   images: [PropertyPhoto!]!
   propertyIds: [ID!]!
+}
+
+type PropertyModel {
+  _id: ID!
+  address: AddressModel!
+  managerIds: [ID!]!
+  portfolioId: ID!
+  typeId: ID!
+  units: Float!
 }
 
 type PropertyPhoto {
@@ -145,7 +167,7 @@ type Query {
   getAdmins: [AdminModel!]!
   getAggregatedProperties: [AggregatedPropertyModel!]!
   getManagers: [AdminModel!]!
-  getPropertiesByQuery(query: String!): Boolean!
+  getPropertiesByQuery(query: String!): [PropertyModel!]!
   getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!
   getPropertyPortfolios(query: String): [PropertyPortfolioModel!]!
   getPropertyTypes(query: String): [PropertyTypesModel!]!

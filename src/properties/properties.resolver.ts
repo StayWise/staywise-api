@@ -6,6 +6,7 @@ import { PropertyTypesModel } from "./models/property-types.model";
 import { PropertiesService } from "./services/properties.service";
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { PropertyGroupedByStateModel } from "./models/properties-grouped-by-state.model";
+import { PropertyModel } from "./models/property.model";
 
 @Resolver()
 export class PropertiesResolver {
@@ -22,10 +23,9 @@ export class PropertiesResolver {
         return true; 
     }
 
-    @Query(() => Boolean)
-    async getPropertiesByQuery(@Args("query") query:string) {
-        await this.propertiesService.getPropertiesByQuery(query);
-        return true; 
+    @Query(() => [ PropertyModel ])
+    async getPropertiesByQuery(@Args("query") query:string) : Promise<PropertyModel[]> {
+        return await this.propertiesService.getPropertiesByQuery(query);
     }
 
     @Query(() => [ PropertyGroupedByStateModel ])
