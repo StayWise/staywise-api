@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ILoginClientDTO } from "src/auth/dtos/loginClient.dto";
+import { NewTenantRequestFormDTO } from "../dtos/newTenantRequestForm.dto";
 import { IUser } from "../interfaces/user.interface";
 import { UserRepository } from "../repositories/user.repository";
 
@@ -8,6 +8,10 @@ export class UserService {
     constructor(
         private readonly userRepo: UserRepository
     ) {}
+
+    async createNewTenantRequest(input:NewTenantRequestFormDTO) {
+        console.log(input);
+    }
 
     async create(doc:IUser) {
         return await this.userRepo.create({ ...doc });
