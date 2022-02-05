@@ -50,6 +50,7 @@ type AdminModel {
 type AggregatedPropertyModel {
   _id: ID!
   address: AddressModel!
+  images: [PropertyPhoto!]
   managerIds: [ID!]!
   managers: [UserModel!]!
   portfolio: PropertyPortfolioModel!
@@ -166,6 +167,7 @@ type Query {
   getAddresses(query: String!): [AddressesModel!]!
   getAdmins: [AdminModel!]!
   getAggregatedProperties: [AggregatedPropertyModel!]!
+  getAggregatedPropertiesByQuery(query: String!): [AggregatedPropertyModel!]!
   getManagers: [AdminModel!]!
   getPropertiesByQuery(query: String!): [PropertyModel!]!
   getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!

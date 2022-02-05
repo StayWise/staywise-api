@@ -52,6 +52,10 @@ export class PropertiesService {
         return property;
     }
 
+    async getAggregatedPropertiesByQuery(query:string) {
+        return this.propertiesRepo.getAggregatedPropertiesByQuery(query);
+    }
+
     async getPropertiesByQuery(query:string) {
         return await this.propertiesRepo.getPropertiesByQuery(query);
     }

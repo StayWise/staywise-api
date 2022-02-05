@@ -1,5 +1,34 @@
-export const propertiesAggregation = () => {
-    return [
+export const propertiesAggregation = ({ query = "", images = false } : { query?: string, images?:boolean }) => {
+    const pipeline = [];
+    
+    if (query) {
+        pipeline.push({
+            $search: {
+                index: "property-search",
+                compound: {
+                    should: [
+                        {
+                            text: {
+                                query,
+                                path: {
+                                    wildcard: '*'
+                                }
+                            }
+                        },
+                        {
+                            autocomplete: {
+                                path: "address.description",
+                                query,
+                            }
+                        }
+                    ],
+                    minimumShouldMatch: 1
+                }
+            }
+        })
+    }
+
+    pipeline.push(...[
         {
             $lookup: {
                 from: "property-types",
@@ -36,5 +65,18 @@ export const propertiesAggregation = () => {
                 as: "managers",
             }
         },
-    ]
+    ]);
+
+    if (images) {
+        pipeline.push({
+            $lookup: {
+                from: "property-photos",
+                localField: "_id",
+                foreignField: "propertyId",
+                as: "images",
+            }
+        })
+    }
+
+    return pipeline; 
 }
