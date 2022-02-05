@@ -28,6 +28,11 @@ export class PropertiesResolver {
         return await this.propertiesService.getPropertiesByQuery(query);
     }
 
+    @Query(() => [ AggregatedPropertyModel ])
+    async getAggregatedPropertiesByQuery(@Args("query") query:string) : Promise<AggregatedPropertyModel[]> {
+        return await this.propertiesService.getAggregatedPropertiesByQuery(query);
+    }
+
     @Query(() => [ PropertyGroupedByStateModel ])
     async getPropertiesGroupedByState() : Promise<PropertyGroupedByStateModel[]> {
         return await this.propertiesService.getPropertiesGroupedByState();

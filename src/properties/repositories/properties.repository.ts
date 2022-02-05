@@ -30,6 +30,10 @@ export class PropertiesRepository {
         });
     }
 
+    public async getAggregatedPropertiesByQuery(query:string) {
+        return await this.propertiesModel.aggregate(propertiesAggregation({ query, images: true }));
+    }
+
     public async getPropertiesByQuery(query:string) {
         return await this.propertiesModel.aggregate(propertiesByQueryAggregation(query));
     }
@@ -39,7 +43,7 @@ export class PropertiesRepository {
     }
 
     public async getAggregatedProperties() {
-        return await this.propertiesModel.aggregate(propertiesAggregation());
+        return await this.propertiesModel.aggregate(propertiesAggregation({}));
     }
 
     public async createProperty(doc:IProperty) {
