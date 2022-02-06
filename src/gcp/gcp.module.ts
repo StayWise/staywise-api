@@ -4,5 +4,6 @@ import { GoogleMapsService } from "./services/places.service";
 
 @Module({
     providers: [ GoogleMapsService, GoogleResolver ],
+    exports: [ GoogleMapsService ]
 })
 export class GCPModule {};
