@@ -6,6 +6,7 @@ import { S3Service } from "src/aws/services/s3.service";
 import { CreatePropertyDTO } from "../dtos/create-property.dto";
 import { PropertiesRepository } from "../repositories/properties.repository";
 import { IPropertyPhoto } from "../interfaces/property-photos.interface";
+import * as Sharp from "sharp";
 
 @Injectable()
 export class PropertiesService {
@@ -33,8 +34,10 @@ export class PropertiesService {
         const photosResponse = await Promise.all(files.map(async (file) => {
             const fileObject = await file; 
             const stream = fileObject.createReadStream();
+            const sharpGraphicProccessor = Sharp();
+            stream.pipe(sharpGraphicProccessor);
             const { writeStream, promise } = this.s3Service.uploadStreamAsPublicObject(bucket, fileObject);
-            stream.pipe(writeStream);
+            sharpGraphicProccessor.webp().pipe(writeStream);
             const upload = await promise.catch((e) => { console.log(e); return null; });
             if (!upload) return null; 
             return upload; 

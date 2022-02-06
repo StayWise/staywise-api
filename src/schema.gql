@@ -14,14 +14,14 @@ input AddressDTO {
 }
 
 type AddressModel {
-  addressLineOne: String!
-  city: String!
-  country: String!
+  addressLineOne: String
+  city: String
+  country: String
   description: String!
-  home: String!
-  postal_code: String!
-  region: String!
-  street: String!
+  home: String
+  postal_code: String
+  region: String
+  street: String
 }
 
 type AddressSegmentsModel {
@@ -67,6 +67,11 @@ input CreatePropertyDTO {
   type: String!
   units: Float!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 input ICreateAdminDTO {
   email: String!
@@ -173,7 +178,20 @@ type Query {
   getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!
   getPropertyPortfolios(query: String): [PropertyPortfolioModel!]!
   getPropertyTypes(query: String): [PropertyTypesModel!]!
+  getRentalRequests: [RentalRequestModel!]!
   getRoot: String!
+}
+
+type RentalRequestModel {
+  _id: ID!
+  additionalInfo: String
+  address: AddressModel!
+  createdAt: DateTime!
+  email: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  requiredBy: DateTime!
 }
 
 """The `Upload` scalar type represents a file upload."""
