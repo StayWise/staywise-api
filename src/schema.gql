@@ -112,6 +112,7 @@ type LoginAdminModel {
 }
 
 type Mutation {
+  addPropertyPhotos(files: [Upload!], propertyId: String!): Boolean!
   createAdmin(file: Upload, input: ICreateAdminDTO!): Boolean
   createNewTenantRequest(input: NewTenantRequestFormDTO!): Boolean!
   createProperty(files: [Upload!], input: CreatePropertyDTO!): Boolean!

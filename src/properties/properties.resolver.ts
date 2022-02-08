@@ -23,6 +23,15 @@ export class PropertiesResolver {
         return true; 
     }
 
+    @Mutation(() => Boolean)
+    async addPropertyPhotos(
+        @Args({ name: "files", type: () => [ GraphQLUpload ], nullable: true, }) files: FileUpload[],
+        @Args("propertyId") propertyId : string 
+    ) : Promise<boolean> {
+        await this.propertiesService.addPropertyPhotos(files, propertyId);
+        return true; 
+    }
+
     @Query(() => [ PropertyModel ])
     async getPropertiesByQuery(@Args("query") query:string) : Promise<PropertyModel[]> {
         return await this.propertiesService.getPropertiesByQuery(query);
