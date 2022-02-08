@@ -43,7 +43,7 @@ export class PropertiesRepository {
     }
 
     public async getAggregatedProperties() {
-        return await this.propertiesModel.aggregate(propertiesAggregation({}));
+        return await this.propertiesModel.aggregate(propertiesAggregation({ images: true }));
     }
 
     public async createProperty(doc:IProperty) {
