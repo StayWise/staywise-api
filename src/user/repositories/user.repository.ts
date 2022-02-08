@@ -44,6 +44,6 @@ export class UserRepository {
     }
 
     async getManagers() {
-        return await this.userModel.aggregate(getAdminsAggregation([ ERoles.MANAGER ]));
+        return await this.userModel.aggregate(getAdminsAggregation([ ERoles.MANAGER, ERoles.ROOT ]));
     }
 }   
