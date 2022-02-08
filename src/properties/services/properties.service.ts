@@ -30,6 +30,12 @@ export class PropertiesService {
             managerIds: input.managerIds,
         })
 
+        await this.addPropertyPhotos(files, property._id.toString());
+        
+        return property;
+    }
+
+    async addPropertyPhotos(files:FileUpload[], propertyId:string) {
         const bucket = config.aws.s3.buckets[ES3Buckets.PROPERTY_PHOTOS];
         const photosResponse = await Promise.all(files.map(async (file) => {
             const fileObject = await file; 
@@ -48,11 +54,10 @@ export class PropertiesService {
             url: uploadObject.Location,
             key: uploadObject.Key,
             bucket: uploadObject.Bucket,
-            propertyId: property._id.toString(),
+            propertyId: propertyId,
         }));
         
         await this.propertiesRepo.createPropertyPhotos(photos);
-        return property;
     }
 
     async getAggregatedPropertiesByQuery(query:string) {
