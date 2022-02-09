@@ -6,6 +6,32 @@ import { PropertyTypesModel } from "./property-types.model";
 import { PropertyPhoto } from "./property-photo.model";
 
 @ObjectType()
+class PropertyUnitBedroomDetails {
+    @Field(() => Number, { nullable: true, defaultValue: null })
+    max: number | null; 
+    @Field(() => Number, { nullable: true, defaultValue: null })
+    min: number | null; 
+}
+
+@ObjectType()
+class PropertyUnitBathroomDetails {
+    @Field(() => Number, { nullable: true, defaultValue: null })
+    max: number | null; 
+    @Field(() => Number, { nullable: true, defaultValue: null })
+    min: number | null; 
+}
+
+@ObjectType()
+class PropertyUnitDetails {
+    @Field(() => Number, { nullable: true, defaultValue: null })
+    available: number | null; 
+    @Field(() => PropertyUnitBedroomDetails, { nullable: true })
+    bedrooms: PropertyUnitBedroomDetails
+    @Field(() => PropertyUnitBathroomDetails, { nullable: true })
+    bathrooms: PropertyUnitBathroomDetails
+}
+
+@ObjectType()
 export class AggregatedPropertyModel extends PropertyModel {
     @Field(() => [ UserModel ])
     managers: UserModel[];
@@ -15,4 +41,6 @@ export class AggregatedPropertyModel extends PropertyModel {
     type: PropertyTypesModel
     @Field(() => [ PropertyPhoto ], { nullable: true, defaultValue: [] })
     images?: PropertyPhoto[];
+    @Field(() => PropertyUnitDetails, { nullable: true, defaultValue: null })
+    unitDetails?: PropertyUnitDetails
 }

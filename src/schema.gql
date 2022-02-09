@@ -57,6 +57,7 @@ type AggregatedPropertyModel {
   portfolioId: ID!
   type: PropertyTypesModel!
   typeId: ID!
+  unitDetails: PropertyUnitDetails
   units: Float!
 }
 
@@ -119,6 +120,7 @@ type Mutation {
   editAdmin(input: IEditAdminDTO!): Boolean!
   loginAdmin(input: ILoginAdminDTO!): LoginAdminModel!
   loginClient(input: ILoginClientDTO!): Boolean!
+  updateUnit(input: UpdateUnitDTO!): Boolean!
 }
 
 input NewTenantRequestFormDTO {
@@ -168,6 +170,31 @@ type PropertyTypesModel {
   name: String!
 }
 
+type PropertyUnitBathroomDetails {
+  max: Float
+  min: Float
+}
+
+type PropertyUnitBedroomDetails {
+  max: Float
+  min: Float
+}
+
+type PropertyUnitDetails {
+  available: Float
+  bathrooms: PropertyUnitBathroomDetails
+  bedrooms: PropertyUnitBedroomDetails
+}
+
+type PropertyUnitModel {
+  _id: ID!
+  bathrooms: Float
+  bedrooms: Float
+  propertyId: ID!
+  status: String!
+  unitNumber: Float!
+}
+
 type Query {
   getAddressGeocode(query: String!): AddressSegmentsModel
   getAddresses(query: String!): [AddressesModel!]!
@@ -181,6 +208,7 @@ type Query {
   getPropertyTypes(query: String): [PropertyTypesModel!]!
   getRentalRequests: [RentalRequestModel!]!
   getRoot: String!
+  getUnits(propertyId: String!): [PropertyUnitModel!]!
 }
 
 type RentalRequestModel {
@@ -193,6 +221,14 @@ type RentalRequestModel {
   lastName: String!
   phone: String!
   requiredBy: DateTime!
+}
+
+input UpdateUnitDTO {
+  bathrooms: Float = null
+  bedrooms: Float = null
+  propertyId: ID!
+  status: String!
+  unitNumber: Float!
 }
 
 """The `Upload` scalar type represents a file upload."""
