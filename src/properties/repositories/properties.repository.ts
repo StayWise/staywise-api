@@ -10,6 +10,8 @@ import { IProperty } from "../interfaces/properties.interface";
 import { IPropertyPhoto } from "../interfaces/property-photos.interface";
 import { IPropertyPortfolio } from "../interfaces/property-portfolio.interface";
 import { IPropertyTypes } from "../interfaces/property-type.interface";
+import { IPropertyUnit } from "../interfaces/property-unit.interface";
+import * as mongoose from "mongoose";
 
 @Injectable()
 export class PropertiesRepository {
@@ -21,7 +23,9 @@ export class PropertiesRepository {
         @InjectModel("properties")
         private readonly propertiesModel: Model<IProperty>,
         @InjectModel("property-photos")
-        private readonly propertyPhotosModel: Model<IPropertyPhoto>
+        private readonly propertyPhotosModel: Model<IPropertyPhoto>,
+        @InjectModel("property-units")
+        private readonly propertyUnits: Model<IPropertyUnit>
     ){}
 
     public async getPropertiesGroupedByState() {
@@ -30,8 +34,20 @@ export class PropertiesRepository {
         });
     }
 
+    public async getUnits(propertyId:string) {
+        return await this.propertyUnits.aggregate([
+            { $match: { propertyId: new mongoose.Types.ObjectId(propertyId)}}
+        ]);
+    }
+
+    public async updateUnit({ unitNumber, ...doc }:IPropertyUnit) {
+        return await this.propertyUnits.updateOne(
+            { unitNumber, }, { ...doc }, { upsert: true },
+        )
+    }
+
     public async getAggregatedPropertiesByQuery(query:string) {
-        return await this.propertiesModel.aggregate(propertiesAggregation({ query, images: true }));
+        return await this.propertiesModel.aggregate(propertiesAggregation({ query, images: true, unitDetails: true }));
     }
 
     public async getPropertiesByQuery(query:string) {

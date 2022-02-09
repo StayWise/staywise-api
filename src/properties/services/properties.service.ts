@@ -7,6 +7,7 @@ import { CreatePropertyDTO } from "../dtos/create-property.dto";
 import { PropertiesRepository } from "../repositories/properties.repository";
 import { IPropertyPhoto } from "../interfaces/property-photos.interface";
 import * as Sharp from "sharp";
+import { UpdateUnitDTO } from "../dtos/update-unit.dto";
 
 @Injectable()
 export class PropertiesService {
@@ -58,6 +59,14 @@ export class PropertiesService {
         }));
         
         await this.propertiesRepo.createPropertyPhotos(photos);
+    }
+
+    async getUnits(propertyId:string) {
+        return await this.propertiesRepo.getUnits(propertyId);
+    }
+
+    async updateUnit(input:UpdateUnitDTO) {
+        return await this.propertiesRepo.updateUnit(input);
     }
 
     async getAggregatedPropertiesByQuery(query:string) {

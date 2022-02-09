@@ -7,6 +7,8 @@ import { PropertiesService } from "./services/properties.service";
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { PropertyGroupedByStateModel } from "./models/properties-grouped-by-state.model";
 import { PropertyModel } from "./models/property.model";
+import { UpdateUnitDTO } from "./dtos/update-unit.dto";
+import { PropertyUnitModel } from "./models/property-unit.model";
 
 @Resolver()
 export class PropertiesResolver {
@@ -60,5 +62,16 @@ export class PropertiesResolver {
     @Query(() => [ PropertyTypesModel ])
     async getPropertyTypes(@Args("query", { nullable: true }) query:string | null) : Promise<PropertyTypesModel[]> {
         return await this.propertiesService.getPropertyTypes(query || "");
+    }
+
+    @Mutation(() => Boolean)
+    async updateUnit(@Args("input") input: UpdateUnitDTO) : Promise<boolean> {
+        await this.propertiesService.updateUnit(input);
+        return true; 
+    }
+
+    @Query(() => [ PropertyUnitModel ])
+    async getUnits(@Args("propertyId") propertyId: string) : Promise<PropertyUnitModel[]> {
+        return await this.propertiesService.getUnits(propertyId);
     }
 }

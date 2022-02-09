@@ -7,6 +7,7 @@ import { PropertiesSchema } from "./schemas/properties.schema";
 import { PropertyPhotoSchema } from "./schemas/property-photos.schema";
 import { PropertyPortfolioSchema } from "./schemas/property-portfolio.schema";
 import { PropertyTypesSchema } from "./schemas/property-types.schema";
+import { PropertyUnitSchema } from "./schemas/property-unit.schema";
 import { PropertiesService } from "./services/properties.service";
 
 @Module({
@@ -16,6 +17,7 @@ import { PropertiesService } from "./services/properties.service";
             { name: "property-types", schema: PropertyTypesSchema },
             { name: "properties", schema: PropertiesSchema },
             { name: "property-photos", schema: PropertyPhotoSchema },
+            { name: "property-units", schema: PropertyUnitSchema },
         ]),
         AWSModule,
     ],
