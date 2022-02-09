@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { FileUpload } from "graphql-upload";
 import config from "../../config";
 import { ES3Buckets } from "src/aws/enums/s3Buckets.enum";
@@ -34,6 +34,21 @@ export class PropertiesService {
         await this.addPropertyPhotos(files, property._id.toString());
         
         return property;
+    }
+
+    async deletePropertyPhotos(photoIds:string[], propertyId:string) {
+        try {
+            const { keys = [] } = await this.propertiesRepo.getPropertyPhotoKeys(photoIds, propertyId);
+            const bucket = config.aws.s3.buckets[ES3Buckets.PROPERTY_PHOTOS];
+            let deletedKeys = await Promise.all(keys.map(async (key:string) => {
+                const response = await this.s3Service.deleteObject(bucket, key).catch(() => null);
+                return !!response ? key : null; 
+            }));
+            deletedKeys = deletedKeys.filter((key) => !!key);
+            await this.propertiesRepo.deletePropertyPhotosByKey(deletedKeys, propertyId);
+        } catch {
+            throw new InternalServerErrorException("Failed to Delete Photos");
+        }
     }
 
     async addPropertyPhotos(files:FileUpload[], propertyId:string) {

@@ -9,6 +9,7 @@ import { PropertyGroupedByStateModel } from "./models/properties-grouped-by-stat
 import { PropertyModel } from "./models/property.model";
 import { UpdateUnitDTO } from "./dtos/update-unit.dto";
 import { PropertyUnitModel } from "./models/property-unit.model";
+import { DeletePhotosDTO } from "./dtos/delete-property.dto";
 
 @Resolver()
 export class PropertiesResolver {
@@ -37,6 +38,12 @@ export class PropertiesResolver {
     @Query(() => [ PropertyModel ])
     async getPropertiesByQuery(@Args("query") query:string) : Promise<PropertyModel[]> {
         return await this.propertiesService.getPropertiesByQuery(query);
+    }
+
+    @Mutation(() => Boolean)
+    async deletePropertyPhotos(@Args("input") { photoIds, propertyId} : DeletePhotosDTO) : Promise<boolean> {
+        await this.propertiesService.deletePropertyPhotos(photoIds, propertyId);
+        return true; 
     }
 
     @Query(() => [ AggregatedPropertyModel ])

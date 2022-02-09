@@ -46,6 +46,30 @@ export class PropertiesRepository {
         )
     }
 
+    public async deletePropertyPhotosByKey(keys:string[], propertyId) {
+        return await this.propertyPhotosModel.deleteMany({ key: { $in: keys }, propertyId});
+    }
+
+    public async getPropertyPhotoKeys(photoIds:string[], propertyId:string) {
+        const [ response ] =  await this.propertyPhotosModel.aggregate([
+            {
+                $match: { 
+                    _id: { $in: photoIds.map(id => new mongoose.Types.ObjectId(id)) },
+                    propertyId: new mongoose.Types.ObjectId(propertyId),
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    keys: {
+                      $addToSet: "$key"
+                    }
+                }
+            }
+        ])
+        return response; 
+    }
+
     public async getAggregatedPropertiesByQuery(query:string) {
         return await this.propertiesModel.aggregate(propertiesAggregation({ query, images: true, unitDetails: true }));
     }
