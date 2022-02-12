@@ -26,6 +26,6 @@ import { PropertiesService } from "./services/properties.service";
         PropertiesResolver, 
         PropertiesService 
     ],
-    exports: [],
+    exports: [ PropertiesRepository ],
 })
 export class PropertiesModule {};;

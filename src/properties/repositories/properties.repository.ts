@@ -50,6 +50,10 @@ export class PropertiesRepository {
         return await this.propertyPhotosModel.deleteMany({ key: { $in: keys }, propertyId});
     }
 
+    public async getPropertyPhotosByPropertyId(propertyId: string, limit?: number ) {
+        return await this.propertyPhotosModel.find({ propertyId }).limit(limit || 1);
+    }
+
     public async getPropertyPhotoKeys(photoIds:string[], propertyId:string) {
         const [ response ] =  await this.propertyPhotosModel.aggregate([
             {

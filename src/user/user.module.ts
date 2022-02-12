@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { GCPModule } from "src/gcp/gcp.module";
+import { PropertiesModule } from "src/properties/properties.module";
+import { SendgridModule } from "src/sendgrid/sendgrid.module";
 import { UserRepository } from "./repositories/user.repository";
 import { TenantRequestSchema } from "./schemas/tenantRequest.schema";
 import UserSchema from "./schemas/user.schema";
@@ -14,11 +16,13 @@ import { UserResolver } from "./user.resolver";
             { name: 'tenant-requests', schema: TenantRequestSchema }
         ]),
         GCPModule,
+        SendgridModule,
+        PropertiesModule,
     ],
     providers: [ 
         UserRepository, 
         UserService, 
-        UserResolver
+        UserResolver,
     ],
     exports: [ UserService ]
 })
