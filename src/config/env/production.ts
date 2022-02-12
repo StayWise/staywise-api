@@ -40,6 +40,10 @@ const config = {
             apiKey: process.env.GOOGLE_MAPS_API_KEY
         }
     },
+    sendgrid: {
+        key: process.env.SENDGRID_API_KEY,
+        from: "noreply@staywiserent.com",
+    },
     port: process.env.PORT || 3000,
     origin: {
         whitelist: [

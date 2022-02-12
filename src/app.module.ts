@@ -13,6 +13,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import { AWSModule } from './aws/aws.module';
 import { GCPModule } from './gcp/gcp.module';
 import { PropertiesModule } from './properties/properties.module';
+import { SendgridModule } from './sendgrid/sendgrid.module';
 
 const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
@@ -39,6 +40,7 @@ const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'develop
     AWSModule,
     GCPModule,
     PropertiesModule,
+    SendgridModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppController],
