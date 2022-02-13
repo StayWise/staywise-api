@@ -190,13 +190,14 @@ export const propertiesAggregation = ({ query = "", images = false, unitDetails 
                 }
                 }
             },
+            // {
+            //     "$match": {
+            //         "unitDetails.available": {
+            //             $gt: 0
+            //         }
+            //     }
+            // }, 
             {
-                "$match": {
-                    "unitDetails.available": {
-                        $gt: 0
-                    }
-                }
-            }, {
                 '$project': {
                     'unitDetails.maxBathrooms': 0, 
                     'unitDetails.minBathrooms': 0, 
