@@ -20,9 +20,16 @@ export class UserRepository {
     }
 
     async getRentalRequests() {
-        return await this.tenantRequestModel.aggregate([{ 
-            $match: {}
-        }])
+        return await this.tenantRequestModel.aggregate([
+            { 
+                $match: {},
+            }, 
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            }
+        ])
     }
 
     async findByEmail(email: string) {

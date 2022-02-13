@@ -102,13 +102,13 @@ export const propertiesAggregation = ({ query = "", images = false, unitDetails 
                                 '$propertyId', '$$propertyId'
                             ]
                             }, {
-                            '$not': {
-                                '$in': [
-                                '$status', [
-                                    'occupied'
-                                ]
-                                ]
-                            }
+                            // '$not': {
+                            //     '$in': [
+                            //     '$status', [
+                            //         'occupied'
+                            //     ]
+                            //     ]
+                            // }
                             }
                         ]
                         }
@@ -160,7 +160,7 @@ export const propertiesAggregation = ({ query = "", images = false, unitDetails 
                             }, {
                             '$in': [
                                 '$status', [
-                                'occupied', 'unlisted'
+                                'occupied', 'unlisted', 
                                 ]
                             ]
                             }
