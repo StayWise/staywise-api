@@ -43,6 +43,7 @@ const config = {
     sendgrid: {
         key: process.env.SENDGRID_API_KEY,
         from: "noreply@staywiserent.com",
+        to: "contact@staywiserent.com",
     },
     port: process.env.PORT || 3000,
     origin: {

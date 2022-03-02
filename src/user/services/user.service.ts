@@ -72,7 +72,7 @@ export class UserService {
 
             await this.sendGridService.sendMeetFormConfirmation({ 
                 to: email,
-                address: propertyAddress,
+                address: propertyAddress.description,
                 name: firstName,
                 url: photo?.url || "",
             }).catch((e) => console.log(e));
