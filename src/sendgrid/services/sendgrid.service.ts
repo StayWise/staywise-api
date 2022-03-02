@@ -25,6 +25,17 @@ export class SendgridService {
         });
     }
 
+    public async sendMeetFormNotification({ to, fields }) {
+        return await this.sendEmail({
+            to,
+            subject: "New Tenant Request Form",
+            dynamicTemplateData: {
+                ...fields
+            },
+            templateId: ETemplateID.MEET_FORM_NOTIFICATION
+        });
+    }
+
     public async sendEmail({ ...fields } : MailData) {
         const email: MailData = {
             from: config.sendgrid.from as string,

@@ -1,4 +1,5 @@
 import { IAddress } from "src/properties/interfaces/address.interface";
+import { EMeetFormStatus } from "../enums/meet-form-status.enum";
 
 export interface ITenantRequest {
     address: IAddress,
@@ -9,4 +10,5 @@ export interface ITenantRequest {
     additionalInfo?: string; 
     email: string; 
     propertyId: string; 
+    status: EMeetFormStatus;
 }

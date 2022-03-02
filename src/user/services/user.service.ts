@@ -5,6 +5,10 @@ import { SendgridService } from "src/sendgrid/services/sendgrid.service";
 import { NewTenantRequestFormDTO } from "../dtos/newTenantRequestForm.dto";
 import { IUser } from "../interfaces/user.interface";
 import { UserRepository } from "../repositories/user.repository";
+import * as mongoose from "mongoose";
+import { EMeetFormStatus } from "../enums/meet-form-status.enum";
+import { UpdateTenantRequestDTO } from "../dtos/updateTenantRequest.dto";
+const moment = require("moment");
 
 @Injectable()
 export class UserService {
@@ -25,6 +29,7 @@ export class UserService {
         
         const request = await this.userRepo.createTenantRequest({
             firstName, 
+            status: EMeetFormStatus.OPEN,
             lastName,
             email, 
             additionalInfo, 
@@ -39,6 +44,31 @@ export class UserService {
 
         if (request) {
             const [ photo ] = await this.propertiesRepository.getPropertyPhotosByPropertyId(propertyId, 1);
+            const [{ managerIds, address:propertyAddress }] = await this.propertiesRepository.findById(new mongoose.Types.ObjectId(propertyId));
+
+            const formNotificationFields = {
+                propertyAddress: propertyAddress.description,
+                email, 
+                requiredBy: moment(requiredBy).format("MMMM Do YYYY"), 
+                phone, 
+                address, 
+                additionalInfo, 
+                firstName, 
+                lastName
+            }
+
+            // await Promise.all(managerIds.map(async (managerId) => {
+            //     return await this.sendGridService.sendMeetFormNotification({
+            //         to: "",
+            //         fields: formNotificationFields
+            //     });
+            // }));
+
+            await this.sendGridService.sendMeetFormNotification({
+                to: "mahit.py@gmail.com",
+                fields: formNotificationFields
+            })
+
             await this.sendGridService.sendMeetFormConfirmation({ 
                 to: email,
                 address: propertyAddress,
@@ -48,6 +78,10 @@ export class UserService {
         }
 
         return request; 
+    }
+
+    async updateTenantRequest(input:UpdateTenantRequestDTO) {
+        return await this.userRepo.updateTenantRequest(input);
     }
 
     async getRentalRequests() {

@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { AddressModel } from "src/properties/models/address.model";
+import { PropertyModel } from "src/properties/models/property.model";
 
 @ObjectType()
 export class RentalRequestModel {
@@ -21,4 +22,10 @@ export class RentalRequestModel {
     requiredBy: Date
     @Field(() => Date)
     createdAt: Date
+    @Field(() => ID)
+    propertyId: Date
+    @Field(() => PropertyModel)
+    property: PropertyModel;
+    @Field(() => String, { nullable: true })
+    status?: string; 
 }

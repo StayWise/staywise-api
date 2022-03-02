@@ -126,6 +126,7 @@ type Mutation {
   editAdmin(input: IEditAdminDTO!): Boolean!
   loginAdmin(input: ILoginAdminDTO!): LoginAdminModel!
   loginClient(input: ILoginClientDTO!): Boolean!
+  updateTenantRequest(input: UpdateTenantRequestDTO!): Boolean!
   updateUnit(input: UpdateUnitDTO!): Boolean!
 }
 
@@ -226,7 +227,15 @@ type RentalRequestModel {
   firstName: String!
   lastName: String!
   phone: String!
+  property: PropertyModel!
+  propertyId: ID!
   requiredBy: DateTime!
+  status: String
+}
+
+input UpdateTenantRequestDTO {
+  _id: ID!
+  status: String!
 }
 
 input UpdateUnitDTO {

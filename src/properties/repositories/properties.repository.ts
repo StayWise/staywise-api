@@ -28,6 +28,10 @@ export class PropertiesRepository {
         private readonly propertyUnits: Model<IPropertyUnit>
     ){}
 
+    public async findById(_id:mongoose.Types.ObjectId) {
+        return await this.propertiesModel.find({ _id });
+    }
+
     public async getPropertiesGroupedByState() {
         return await this.propertiesModel.aggregate(propertiesGroupedByStateAggregation(), { 
             allowDiskUse: true

@@ -1,5 +1,6 @@
 import { Args, Mutation, Resolver, Query } from "@nestjs/graphql";
 import { NewTenantRequestFormDTO } from "./dtos/newTenantRequestForm.dto";
+import { UpdateTenantRequestDTO } from "./dtos/updateTenantRequest.dto";
 import { RentalRequestModel } from "./models/rentalRequest.model";
 import { UserService } from "./services/user.service";
 
@@ -12,6 +13,12 @@ export class UserResolver {
     @Mutation(() => Boolean)
     async createNewTenantRequest(@Args("input") input : NewTenantRequestFormDTO) : Promise<boolean> {
         await this.userService.createNewTenantRequest(input);
+        return true; 
+    }
+
+    @Mutation(() => Boolean)
+    async updateTenantRequest(@Args("input") input : UpdateTenantRequestDTO) : Promise<boolean> {
+        await this.userService.updateTenantRequest(input);
         return true; 
     }
 
