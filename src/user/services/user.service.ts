@@ -8,6 +8,7 @@ import { UserRepository } from "../repositories/user.repository";
 import * as mongoose from "mongoose";
 import { EMeetFormStatus } from "../enums/meet-form-status.enum";
 import { UpdateTenantRequestDTO } from "../dtos/updateTenantRequest.dto";
+import config from "src/config";
 const moment = require("moment");
 
 @Injectable()
@@ -65,7 +66,7 @@ export class UserService {
             // }));
 
             await this.sendGridService.sendMeetFormNotification({
-                to: "mahit.py@gmail.com",
+                to: config.sendgrid.to,
                 fields: formNotificationFields
             })
 

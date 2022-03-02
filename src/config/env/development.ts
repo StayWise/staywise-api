@@ -43,6 +43,7 @@ const config = {
     sendgrid: {
         key: "REDACTED",
         from: "noreply@staywiserent.com",
+        to: "contact@staywiserent.com",
     },
     port: 3000,
 }
