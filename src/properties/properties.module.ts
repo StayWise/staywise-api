@@ -1,6 +1,9 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AWSModule } from "src/aws/aws.module";
+import config from "src/config";
+import { UserModule } from "src/user/user.module";
 import { PropertiesResolver } from "./properties.resolver";
 import { PropertiesRepository } from "./repositories/properties.repository";
 import { PropertiesSchema } from "./schemas/properties.schema";
@@ -19,6 +22,13 @@ import { PropertiesService } from "./services/properties.service";
             { name: "property-photos", schema: PropertyPhotoSchema },
             { name: "property-units", schema: PropertyUnitSchema },
         ]),
+        JwtModule.register({
+            secret: config.jwt.jwtSecret,
+            signOptions: {
+              expiresIn: config.jwt.jwtExpire,
+            },
+        }),
+        forwardRef(() => UserModule),
         AWSModule,
     ],
     providers: [ 

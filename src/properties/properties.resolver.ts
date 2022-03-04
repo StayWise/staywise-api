@@ -10,6 +10,8 @@ import { PropertyModel } from "./models/property.model";
 import { UpdateUnitDTO } from "./dtos/update-unit.dto";
 import { PropertyUnitModel } from "./models/property-unit.model";
 import { DeletePhotosDTO } from "./dtos/delete-property.dto";
+import { UseGuards } from "@nestjs/common";
+import { RootGuard } from "src/auth/guards/root.guard";
 
 @Resolver()
 export class PropertiesResolver {
@@ -17,6 +19,7 @@ export class PropertiesResolver {
         private readonly propertiesService: PropertiesService
     ) {}
     
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async createProperty(
         @Args({ name: "files", type: () => [ GraphQLUpload ], nullable: true, }) files: FileUpload[], 
@@ -26,6 +29,7 @@ export class PropertiesResolver {
         return true; 
     }
 
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async addPropertyPhotos(
         @Args({ name: "files", type: () => [ GraphQLUpload ], nullable: true, }) files: FileUpload[],
@@ -40,6 +44,7 @@ export class PropertiesResolver {
         return await this.propertiesService.getPropertiesByQuery(query);
     }
 
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async deletePropertyPhotos(@Args("input") { photoIds, propertyId} : DeletePhotosDTO) : Promise<boolean> {
         await this.propertiesService.deletePropertyPhotos(photoIds, propertyId);
@@ -66,17 +71,20 @@ export class PropertiesResolver {
         return await this.propertiesService.getPropertyPortfolios(query || "");
     }
 
+    @UseGuards(RootGuard)
     @Query(() => [ PropertyTypesModel ])
     async getPropertyTypes(@Args("query", { nullable: true }) query:string | null) : Promise<PropertyTypesModel[]> {
         return await this.propertiesService.getPropertyTypes(query || "");
     }
 
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async updateUnit(@Args("input") input: UpdateUnitDTO) : Promise<boolean> {
         await this.propertiesService.updateUnit(input);
         return true; 
     }
 
+    @UseGuards(RootGuard)
     @Query(() => [ PropertyUnitModel ])
     async getUnits(@Args("propertyId") propertyId: string) : Promise<PropertyUnitModel[]> {
         return await this.propertiesService.getUnits(propertyId);

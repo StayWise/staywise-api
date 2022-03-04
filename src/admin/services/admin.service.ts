@@ -28,14 +28,14 @@ export class AdminService {
         return await this.userService.create({
             firstName: input.firstName,
             lastName: input.lastName,
-            roles: [ input.role as ERoles ],
+            roles: input.roles as ERoles[],
             email: input.email,
             pass: await this.authService.encryptString(input.temporaryPassword),
         });
     }
 
-    async editAdmin({ _id, password, role, email:_email, ...fields }:IEditAdminDTO) {
-        const fieldsPendingUpdate:IUser = { roles: [ role ], ...fields }; 
+    async editAdmin({ _id, password, roles, email:_email, ...fields }:IEditAdminDTO) {
+        const fieldsPendingUpdate:IUser = { roles, ...fields }; 
         if (password) fieldsPendingUpdate.pass = await this.authService.encryptString(password);
         return await this.userService.updateById(_id, fieldsPendingUpdate);
     }

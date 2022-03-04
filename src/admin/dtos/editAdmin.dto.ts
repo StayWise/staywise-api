@@ -12,8 +12,8 @@ export class IEditAdminDTO {
     lastName: string; 
     @Field(() => String)
     email: string;
-    @Field(() => String)
-    role: ERoles;
+    @Field(() => [String])
+    roles: ERoles[];
     @Field(() => String, { nullable: true })
     password: string; 
     @Field(() => String)

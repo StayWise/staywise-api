@@ -28,8 +28,20 @@ export class PropertiesRepository {
         private readonly propertyUnits: Model<IPropertyUnit>
     ){}
 
-    public async findById(_id:mongoose.Types.ObjectId) {
-        return await this.propertiesModel.find({ _id });
+    public async findByIdWithManagersEmails(_id:mongoose.Types.ObjectId) {
+        const [ response ] =  await this.propertiesModel.aggregate([
+            {
+                $match: { _id },
+            }, {
+                $lookup: {
+                    from: "users",
+                    localField: "managerIds",
+                    foreignField: "_id",
+                    as: "managers",
+                }
+            },
+        ]);
+        return response; 
     }
 
     public async getPropertiesGroupedByState() {

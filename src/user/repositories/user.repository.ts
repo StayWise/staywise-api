@@ -18,6 +18,10 @@ export class UserRepository {
         private readonly tenantRequestModel : Model<any>
     ) {}
 
+    async findById(_id:string) {
+        return await this.userModel.findById(new mongoose.Types.ObjectId(_id));
+    }
+
     async updateTenantRequest({ _id, ...input } : UpdateTenantRequestDTO) {
         return await this.tenantRequestModel.updateOne(
             { 
@@ -56,6 +60,6 @@ export class UserRepository {
     }
 
     async getManagers() {
-        return await this.userModel.aggregate(getAdminsAggregation([ ERoles.MANAGER, ERoles.ROOT ]));
+        return await this.userModel.aggregate(getAdminsAggregation([ ERoles.MANAGER ]));
     }
 }   

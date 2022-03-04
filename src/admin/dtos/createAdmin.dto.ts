@@ -8,8 +8,8 @@ export class ICreateAdminDTO {
     lastName: string; 
     @Field(() => String)
     email: string;
-    @Field(() => String)
-    role: string;
+    @Field(() => [ String ])
+    roles: string[];
     @Field(() => String)
     temporaryPassword: string; 
 }

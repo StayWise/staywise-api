@@ -83,7 +83,7 @@ input ICreateAdminDTO {
   email: String!
   firstName: String!
   lastName: String!
-  role: String!
+  roles: [String!]!
   temporaryPassword: String!
 }
 
@@ -93,7 +93,7 @@ input IEditAdminDTO {
   firstName: String!
   lastName: String!
   password: String
-  role: String!
+  roles: [String!]!
   status: String!
 }
 

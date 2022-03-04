@@ -1,4 +1,6 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Resolver, Query } from "@nestjs/graphql";
+import { AdminGuard } from "src/auth/guards/admin.guard";
 import { NewTenantRequestFormDTO } from "./dtos/newTenantRequestForm.dto";
 import { UpdateTenantRequestDTO } from "./dtos/updateTenantRequest.dto";
 import { RentalRequestModel } from "./models/rentalRequest.model";
@@ -16,12 +18,14 @@ export class UserResolver {
         return true; 
     }
 
+    @UseGuards(AdminGuard)
     @Mutation(() => Boolean)
     async updateTenantRequest(@Args("input") input : UpdateTenantRequestDTO) : Promise<boolean> {
         await this.userService.updateTenantRequest(input);
         return true; 
     }
 
+    @UseGuards(AdminGuard)
     @Query(() => [ RentalRequestModel ])
     async getRentalRequests() : Promise<RentalRequestModel[]> {
         return await this.userService.getRentalRequests();

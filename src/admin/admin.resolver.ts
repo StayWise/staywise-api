@@ -6,6 +6,8 @@ import { AdminService } from "./services/admin.service";
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { AdminModel } from "./models/admin.model";
 import { IEditAdminDTO } from "./dtos/editAdmin.dto";
+import { UseGuards } from "@nestjs/common";
+import { RootGuard } from "src/auth/guards/root.guard";
 
 @Resolver(() => AdminModel)
 export class AdminResolver {
@@ -18,6 +20,7 @@ export class AdminResolver {
         return await this.adminService.loginAdmin(input);
     }   
 
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean, { nullable: true })
     async createAdmin(
         @Args({ name: "file", type: () => GraphQLUpload, nullable: true, }) { createReadStream }: FileUpload, 
@@ -27,6 +30,7 @@ export class AdminResolver {
         return true; 
     }
 
+    @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async editAdmin(
         @Args("input") input:IEditAdminDTO) : Promise<boolean> {
@@ -34,11 +38,13 @@ export class AdminResolver {
         return true; 
     }
 
+    @UseGuards(RootGuard)
     @Query(() => [ AdminModel ])
     async getAdmins() : Promise<AdminModel[]> {
         return await this.adminService.getAdmins();
     }
 
+    @UseGuards(RootGuard)
     @Query(() => [ AdminModel ])
     async getManagers() : Promise<AdminModel[]> {
         return await this.adminService.getManagers();

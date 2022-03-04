@@ -45,7 +45,7 @@ export class UserService {
 
         if (request) {
             const [ photo ] = await this.propertiesRepository.getPropertyPhotosByPropertyId(propertyId, 1);
-            const [{ managerIds, address:propertyAddress }] = await this.propertiesRepository.findById(new mongoose.Types.ObjectId(propertyId));
+            const { managers, address:propertyAddress } = await this.propertiesRepository.findByIdWithManagersEmails(new mongoose.Types.ObjectId(propertyId));
 
             const formNotificationFields = {
                 propertyAddress: propertyAddress.description,
@@ -58,12 +58,14 @@ export class UserService {
                 lastName
             }
 
-            // await Promise.all(managerIds.map(async (managerId) => {
-            //     return await this.sendGridService.sendMeetFormNotification({
-            //         to: "",
-            //         fields: formNotificationFields
-            //     });
-            // }));
+            const managerEmails = managers.map((manager:IUser) : string => manager.email);
+
+            await Promise.all(managerEmails.map(async (email:string) => {
+                return await this.sendGridService.sendMeetFormNotification({
+                    to: email,
+                    fields: formNotificationFields
+                });
+            }));
 
             await this.sendGridService.sendMeetFormNotification({
                 to: config.sendgrid.to,
