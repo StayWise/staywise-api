@@ -16,11 +16,11 @@ export class RootGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const headers = ctx.getContext().req.headers; 
-    if (headers.authorization) {
+    const accessToken = ctx.getContext()?.req?.cookies?.access_token; 
+
+    if (accessToken) {
       try {
-        const token = headers.authorization.slice(7);
-        const data:IUser = this.jwtService.verify(token);
+        const data:IUser = this.jwtService.verify(accessToken);
         if (!data) return false; 
         const user:IUser = await this.userRepo.findById(data._id.toString());
         const accountActive = user.status === EStatus.ACTIVE; 

@@ -21,6 +21,10 @@ const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'develop
   imports: [
     GraphQLModule.forRootAsync({
       useFactory: () => ({
+        cors: {
+          origin: config?.origin?.whitelist,
+          credentials: true,
+        },
         debug: isDevelopment,
         playground: isDevelopment,
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

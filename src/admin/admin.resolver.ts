@@ -24,21 +24,21 @@ export class AdminResolver {
         const { accessToken, ...user } =  await this.adminService.loginAdmin(input);
         const res = (ctx as any).req.res;
         
-        const expires = moment().add(config.jwt.jwtExpire, 'seconds').toDate();
+        const expires = input.remember ? moment().add(config.jwt.jwtExpire, 'seconds').toDate() : undefined;
         
-        res.cookie('accessToken', accessToken, {
+        res.cookie('access_token', accessToken, {
             expires,
             sameSite: 'none',
             httpOnly: true,
             secure: true,
         });
-        res.cookie('auth_access', true, {  
+        res.cookie('has_access', true, {  
             secure: true, 
             sameSite: "none", 
             expires  
         });
 
-        return { ...user, accessToken } as any; 
+        return user; 
     }   
 
     @UseGuards(RootGuard)

@@ -6,4 +6,6 @@ export class ILoginAdminDTO {
     email: string; 
     @Field(() => String)
     pass: string
+    @Field(() => Boolean, { defaultValue: false }) 
+    remember: boolean; 
 }

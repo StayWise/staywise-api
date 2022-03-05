@@ -2,7 +2,4 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { UserModel } from "src/user/models/user.model";
 
 @ObjectType()
-export class LoginAdminModel extends UserModel {
-    @Field(() => String, { nullable: true })
-    accessToken?: string;
-}
+export class LoginAdminModel extends UserModel {}

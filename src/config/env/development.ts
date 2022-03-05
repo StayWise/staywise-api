@@ -46,6 +46,12 @@ const config = {
         to: "contact+dev@staywiserent.com"
     },
     port: 3000,
+    origin: {
+        whitelist: [
+            "http://localhost:3002", 
+            "http://localhost:3001"
+        ]
+    },
 }
 
 module.exports = config; 
