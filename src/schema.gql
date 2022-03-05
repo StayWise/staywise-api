@@ -109,7 +109,7 @@ input ILoginClientDTO {
 
 type LoginAdminModel {
   _id: ID!
-  accessToken: String!
+  accessToken: String
   email: String!
   firstName: String
   lastName: String

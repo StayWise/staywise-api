@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Context, GraphQLExecutionContext, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ICreateAdminDTO } from "./dtos/createAdmin.dto";
 import { ILoginAdminDTO } from "./dtos/loginAdmin.dto";
 import { LoginAdminModel } from "./models/login-admin.model";
@@ -8,6 +8,10 @@ import { AdminModel } from "./models/admin.model";
 import { IEditAdminDTO } from "./dtos/editAdmin.dto";
 import { UseGuards } from "@nestjs/common";
 import { RootGuard } from "src/auth/guards/root.guard";
+import config from "src/config";
+
+import momentType from "moment";
+const moment: typeof momentType = require("moment");
 
 @Resolver(() => AdminModel)
 export class AdminResolver {
@@ -16,8 +20,25 @@ export class AdminResolver {
     ){}
 
     @Mutation(() => LoginAdminModel)
-    async loginAdmin(@Args("input") input:ILoginAdminDTO) : Promise<LoginAdminModel> {
-        return await this.adminService.loginAdmin(input);
+    async loginAdmin(@Context() ctx: GraphQLExecutionContext, @Args("input") input:ILoginAdminDTO) : Promise<LoginAdminModel> {
+        const { accessToken, ...user } =  await this.adminService.loginAdmin(input);
+        const res = (ctx as any).req.res;
+        
+        const expires = moment().add(config.jwt.jwtExpire, 'seconds').toDate();
+        
+        res.cookie('accessToken', accessToken, {
+            expires,
+            sameSite: 'none',
+            httpOnly: true,
+            secure: true,
+        });
+        res.cookie('auth_access', true, {  
+            secure: true, 
+            sameSite: "none", 
+            expires  
+        });
+
+        return { ...user, accessToken } as any; 
     }   
 
     @UseGuards(RootGuard)

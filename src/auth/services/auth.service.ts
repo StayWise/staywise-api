@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { UserService } from "src/user/services/user.service";
 import { SignOptions } from 'jsonwebtoken';
 import { JwtService } from "@nestjs/jwt";
+import config from "src/config";
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
         const salt = await bcrypt.genSalt(saltRounds);
         return await bcrypt.hash(input, salt);
     }
-
+    
     public async generateAccessToken(data, options?: SignOptions) {
         return this.jwtService.sign(data, options);
     }

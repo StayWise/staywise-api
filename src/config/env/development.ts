@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const config = {
     mongodb: {
-        uri: "mongodb://localhost:27017/staywise",
+        uri: process.env.MONGODB_URI || "mongodb://localhost:27017/staywise",
         options: {
             useNewUrlParser: true,
             useUnifiedTopology: true,
