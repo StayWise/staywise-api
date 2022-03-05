@@ -5,6 +5,7 @@ export {};
 require("dotenv").config();
 
 const config = {
+    domain: "localhost",
     mongodb: {
         uri: process.env.MONGODB_URI || "mongodb://localhost:27017/staywise",
         options: {

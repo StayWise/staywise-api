@@ -5,6 +5,7 @@ export {};
 require("dotenv").config();
 
 const config = {
+    domain: "staywiserent.com",
     mongodb: {
         uri: process.env.MONGODB_URI,
         options: {

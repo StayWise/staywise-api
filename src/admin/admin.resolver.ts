@@ -25,17 +25,20 @@ export class AdminResolver {
         const res = (ctx as any).req.res;
         
         const expires = input.remember ? moment().add(config.jwt.jwtExpire, 'seconds').toDate() : undefined;
-        
+        const domain = process.env.NODE_ENV === "production" ? `.${config.domain}` : config.domain; 
+
         res.cookie('access_token', accessToken, {
             expires,
             sameSite: 'none',
             httpOnly: true,
             secure: true,
+            domain,
         });
         res.cookie('has_access', true, {  
             secure: true, 
             sameSite: "none", 
-            expires  
+            expires,
+            domain
         });
 
         return user; 
