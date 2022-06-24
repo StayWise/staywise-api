@@ -1,38 +1,6 @@
-interface IPropertyAggregationOptions { 
-    query?: string, 
-    images?:boolean, 
-    unitDetails?:boolean
-}
 
-export const propertiesAggregation = ({ query = "", images = false, unitDetails = false } : IPropertyAggregationOptions) => {
-    const pipeline = [];
-    
-    if (query) {
-        pipeline.push({
-            $search: {
-                index: "property-search",
-                compound: {
-                    should: [
-                        {
-                            text: {
-                                query,
-                                path: {
-                                    wildcard: '*'
-                                }
-                            }
-                        },
-                        {
-                            autocomplete: {
-                                path: "address.description",
-                                query,
-                            }
-                        }
-                    ],
-                    minimumShouldMatch: 1
-                }
-            }
-        })
-    }
+export const getPropertiesAggregation = ({ images, unitDetails }) => {
+    let pipeline = [];
 
     pipeline.push(...[
         {
@@ -209,6 +177,6 @@ export const propertiesAggregation = ({ query = "", images = false, unitDetails 
             }
         ])
     }
+
     return pipeline; 
 }
-

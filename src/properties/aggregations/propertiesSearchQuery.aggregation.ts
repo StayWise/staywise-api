@@ -1,15 +1,7 @@
-import { getPropertiesAggregation } from "./properties.aggregation";
-
-interface IPropertyAggregationOptions { 
-    query?: string, 
-    images?:boolean, 
-    unitDetails?:boolean
-}
-
-export const propertiesByQueryAggregation = ({ query = "", images = false, unitDetails = false } : IPropertyAggregationOptions) => {
+export const propertiesSearchQueryAggregation = (query:string) => {
     const pipeline = [];
-    
-    if (query) {
+
+    if (query) { 
         pipeline.push({
             $search: {
                 index: "property-search",
@@ -36,8 +28,9 @@ export const propertiesByQueryAggregation = ({ query = "", images = false, unitD
         })
     }
 
-    pipeline.push(...getPropertiesAggregation({ images, unitDetails }));
+    pipeline.push({
+        $limit: 75,
+    })
 
     return pipeline; 
 }
-

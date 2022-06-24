@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { propertiesAggregation } from "../aggregations/properties.aggregation";
 import { propertiesByQueryAggregation } from "../aggregations/propertiesByQuery.aggregation";
+import { propertiesSearchQueryAggregation } from "../aggregations/propertiesSearchQuery.aggregation";
 import { propertiesGroupedByStateAggregation } from "../aggregations/propertiesGroupedByState.aggregation";
 import { propertyPortfoliosAggregation } from "../aggregations/property-portfolios.aggregation";
 import { propertyTypesAggregation } from "../aggregations/property-types.aggregation";
@@ -12,6 +12,7 @@ import { IPropertyPortfolio } from "../interfaces/property-portfolio.interface";
 import { IPropertyTypes } from "../interfaces/property-type.interface";
 import { IPropertyUnit } from "../interfaces/property-unit.interface";
 import * as mongoose from "mongoose";
+import { getPropertiesAggregation } from "../aggregations/properties.aggregation";
 
 @Injectable()
 export class PropertiesRepository {
@@ -90,12 +91,28 @@ export class PropertiesRepository {
         return response; 
     }
 
+    public async getAggregatedPropertyById(id:string) {
+        const properties = await this.propertiesModel.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(id)
+                }
+            },
+            ...getPropertiesAggregation({ images: true, unitDetails: true})
+        ]);
+        return properties.length ? properties[0] : null; 
+    }
+
     public async getAggregatedPropertiesByQuery(query:string) {
-        return await this.propertiesModel.aggregate(propertiesAggregation({ query, images: true, unitDetails: true }));
+        return await this.propertiesModel.aggregate(propertiesByQueryAggregation({ query, images: true, unitDetails: true }));
+    }
+
+    public async getProperties() {
+        return await this.propertiesModel.find().exec();
     }
 
     public async getPropertiesByQuery(query:string) {
-        return await this.propertiesModel.aggregate(propertiesByQueryAggregation(query));
+        return await this.propertiesModel.aggregate(propertiesSearchQueryAggregation(query));
     }
         
     public async createPropertyPhotos(photos:IPropertyPhoto[]) {
@@ -103,7 +120,7 @@ export class PropertiesRepository {
     }
 
     public async getAggregatedProperties() {
-        return await this.propertiesModel.aggregate(propertiesAggregation({ images: true }));
+        return await this.propertiesModel.aggregate(propertiesByQueryAggregation({ images: true }));
     }
 
     public async createProperty(doc:IProperty) {

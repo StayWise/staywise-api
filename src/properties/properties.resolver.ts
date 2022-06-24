@@ -12,6 +12,7 @@ import { PropertyUnitModel } from "./models/property-unit.model";
 import { DeletePhotosDTO } from "./dtos/delete-property.dto";
 import { UseGuards } from "@nestjs/common";
 import { RootGuard } from "src/auth/guards/root.guard";
+import { IProperty } from "./interfaces/properties.interface";
 
 @Resolver()
 export class PropertiesResolver {
@@ -59,6 +60,16 @@ export class PropertiesResolver {
     @Query(() => [ PropertyGroupedByStateModel ])
     async getPropertiesGroupedByState() : Promise<PropertyGroupedByStateModel[]> {
         return await this.propertiesService.getPropertiesGroupedByState();
+    }
+
+    @Query(() => AggregatedPropertyModel) 
+    async getAggregatedPropertyById(@Args("id") id:string) : Promise<AggregatedPropertyModel> {
+        return await this.propertiesService.getAggregatedPropertyById(id);
+    }
+
+    @Query(() => [ PropertyModel ])
+    async getProperties() : Promise<IProperty[]> {
+        return await this.propertiesService.getProperties();
     }
 
     @Query(() => [ AggregatedPropertyModel ])

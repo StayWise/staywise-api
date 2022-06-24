@@ -76,6 +76,10 @@ export class PropertiesService {
         await this.propertiesRepo.createPropertyPhotos(photos);
     }
 
+    async getProperties() {
+        return await this.propertiesRepo.getProperties();
+    }
+
     async getUnits(propertyId:string) {
         return await this.propertiesRepo.getUnits(propertyId);
     }
@@ -83,6 +87,10 @@ export class PropertiesService {
     async updateUnit(input:UpdateUnitDTO) {
         return await this.propertiesRepo.updateUnit(input);
     }
+
+    async getAggregatedPropertyById(id:string) {
+        return await this.propertiesRepo.getAggregatedPropertyById(id)
+    }   
 
     async getAggregatedPropertiesByQuery(query:string) {
         return this.propertiesRepo.getAggregatedPropertiesByQuery(query);

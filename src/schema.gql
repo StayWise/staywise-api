@@ -208,7 +208,9 @@ type Query {
   getAdmins: [AdminModel!]!
   getAggregatedProperties: [AggregatedPropertyModel!]!
   getAggregatedPropertiesByQuery(query: String!): [AggregatedPropertyModel!]!
+  getAggregatedPropertyById(id: String!): AggregatedPropertyModel!
   getManagers: [AdminModel!]!
+  getProperties: [PropertyModel!]!
   getPropertiesByQuery(query: String!): [PropertyModel!]!
   getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!
   getPropertyPortfolios(query: String): [PropertyPortfolioModel!]!
