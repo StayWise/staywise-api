@@ -47,6 +47,11 @@ type AdminModel {
   status: String
 }
 
+type AggregatedPropertyConnection {
+  edges: [AggregatedPropertyModelEdge!]!
+  page: AggregatedPropertyModelPageInfo!
+}
+
 type AggregatedPropertyModel {
   _id: ID!
   address: AddressModel!
@@ -59,6 +64,17 @@ type AggregatedPropertyModel {
   typeId: ID!
   unitDetails: PropertyUnitDetails
   units: Float!
+}
+
+type AggregatedPropertyModelEdge {
+  cursor: String
+  node: AggregatedPropertyModel!
+}
+
+type AggregatedPropertyModelPageInfo {
+  count: Float!
+  limit: Float
+  skip: Float!
 }
 
 input CreatePropertyDTO {
@@ -142,6 +158,11 @@ input NewTenantRequestFormDTO {
   requiredBy: String!
 }
 
+type PropertyConnection {
+  edges: [PropertyModelEdge!]!
+  page: PropertyModelPageInfo!
+}
+
 type PropertyGroupedByStateModel {
   _id: ID!
   cities: [String!]!
@@ -156,6 +177,17 @@ type PropertyModel {
   portfolioId: ID!
   typeId: ID!
   units: Float!
+}
+
+type PropertyModelEdge {
+  cursor: String
+  node: PropertyModel!
+}
+
+type PropertyModelPageInfo {
+  count: Float!
+  limit: Float
+  skip: Float!
 }
 
 type PropertyPhoto {
@@ -208,10 +240,12 @@ type Query {
   getAdmins: [AdminModel!]!
   getAggregatedProperties: [AggregatedPropertyModel!]!
   getAggregatedPropertiesByQuery(query: String!): [AggregatedPropertyModel!]!
+  getAggregatedPropertiesConnection(limit: Float, query: String!, skip: Float = 0): AggregatedPropertyConnection!
   getAggregatedPropertyById(id: String!): AggregatedPropertyModel!
   getManagers: [AdminModel!]!
   getProperties: [PropertyModel!]!
   getPropertiesByQuery(query: String!): [PropertyModel!]!
+  getPropertiesConnection(limit: Float, skip: Float = 0): PropertyConnection!
   getPropertiesGroupedByState: [PropertyGroupedByStateModel!]!
   getPropertyPortfolios(query: String): [PropertyPortfolioModel!]!
   getPropertyTypes(query: String): [PropertyTypesModel!]!

@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args,  Mutation, Query, Resolver } from "@nestjs/graphql";
 import { CreatePropertyDTO } from "./dtos/create-property.dto";
 import { AggregatedPropertyModel } from "./models/aggregated-property.model";
 import { PropertyPortfolioModel } from "./models/property-portfolio.model";
@@ -13,13 +13,18 @@ import { DeletePhotosDTO } from "./dtos/delete-property.dto";
 import { UseGuards } from "@nestjs/common";
 import { RootGuard } from "src/auth/guards/root.guard";
 import { IProperty } from "./interfaces/properties.interface";
+import { PropertyConnection } from "./connections/property.connection";
+import { ConnectionArguments } from "src/graphql/Connection";
+import { AggregatedPropertyConnection } from "./connections/aggregatedProperty.connection";
+import { PropertiesRepository } from "./repositories/properties.repository";
 
-@Resolver()
+@Resolver(() => PropertyModel)
 export class PropertiesResolver {
     constructor(
-        private readonly propertiesService: PropertiesService
+        private readonly propertiesService: PropertiesService,
+        private readonly propertiesRepo: PropertiesRepository
     ) {}
-    
+
     @UseGuards(RootGuard)
     @Mutation(() => Boolean)
     async createProperty(
@@ -72,9 +77,29 @@ export class PropertiesResolver {
         return await this.propertiesService.getProperties();
     }
 
+    @Query(() => PropertyConnection)
+    async getPropertiesConnection(@Args() args: ConnectionArguments) {
+        return this.propertiesService.getPropertiesConnection(args)
+    }
+
     @Query(() => [ AggregatedPropertyModel ])
     async getAggregatedProperties() : Promise<AggregatedPropertyModel[]> {
         return await this.propertiesService.getAggregatedProperties();
+    }
+
+    @Query(() => AggregatedPropertyConnection)
+    async getAggregatedPropertiesConnection(@Args() args: ConnectionArguments, @Args("query") query:string) {
+        const { count, edges } = await this.propertiesRepo.getAggregatedPropertiesByQueryConnection(args, query); 
+        return {
+            edges: edges.map(e => ({
+                node: e
+            })),
+            page: {
+                skip: args.skip || 0,
+                limit: args.limit,
+                count: count
+            }
+        }
     }
 
     @Query(() => [ PropertyPortfolioModel ])

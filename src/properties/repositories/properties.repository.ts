@@ -13,9 +13,11 @@ import { IPropertyTypes } from "../interfaces/property-type.interface";
 import { IPropertyUnit } from "../interfaces/property-unit.interface";
 import * as mongoose from "mongoose";
 import { getPropertiesAggregation } from "../aggregations/properties.aggregation";
+import { RelayRepositry } from "src/graphql/relay.repository";
+import { ConnectionArguments } from "src/graphql/Connection";
 
 @Injectable()
-export class PropertiesRepository {
+export class PropertiesRepository extends RelayRepositry<IProperty> {
     constructor(
         @InjectModel('property-portfolios')
         private readonly propertyPortfoliosModel: Model<IPropertyPortfolio>,
@@ -27,7 +29,9 @@ export class PropertiesRepository {
         private readonly propertyPhotosModel: Model<IPropertyPhoto>,
         @InjectModel("property-units")
         private readonly propertyUnits: Model<IPropertyUnit>
-    ){}
+    ){
+        super(propertiesModel);
+    }
 
     public async findByIdWithManagersEmails(_id:mongoose.Types.ObjectId) {
         const [ response ] =  await this.propertiesModel.aggregate([
@@ -105,6 +109,17 @@ export class PropertiesRepository {
 
     public async getAggregatedPropertiesByQuery(query:string) {
         return await this.propertiesModel.aggregate(propertiesByQueryAggregation({ query, images: true, unitDetails: true }));
+    }
+
+    public async getAggregatedPropertiesByQueryConnection(args:ConnectionArguments,query:string) {
+        return await this.findAll(
+            args,
+            propertiesByQueryAggregation({ query, images: true, unitDetails: true })
+        );
+    }
+
+    public async getPropertiesConnection(_args: ConnectionArguments) {
+        return await this.propertiesModel.find().exec();
     }
 
     public async getProperties() {

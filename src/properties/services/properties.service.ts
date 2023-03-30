@@ -8,6 +8,7 @@ import { PropertiesRepository } from "../repositories/properties.repository";
 import { IPropertyPhoto } from "../interfaces/property-photos.interface";
 import * as Sharp from "sharp";
 import { UpdateUnitDTO } from "../dtos/update-unit.dto";
+import { ConnectionArguments } from "src/graphql/Connection";
 
 @Injectable()
 export class PropertiesService {
@@ -74,6 +75,10 @@ export class PropertiesService {
         }));
         
         await this.propertiesRepo.createPropertyPhotos(photos);
+    }
+
+    async getPropertiesConnection(args: ConnectionArguments) {
+        return await this.propertiesRepo.getPropertiesConnection(args);
     }
 
     async getProperties() {
