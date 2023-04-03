@@ -6,7 +6,6 @@ services:
         image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-prod
         ports:
             - 3000:3000
-            - 9230:9230
         environment:
             - MONGODB_URI=$MONGODB_URI
             - JWT_SECRET=$JWT_SECRET
@@ -21,14 +20,5 @@ services:
         networks:
             - nestjs-network
         restart: unless-stopped
-    nginx: 
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
-        container_name: nginx
-        networks:
-            - nestjs-network
-        depends_on: 
-            - prod
-        ports: 
-            - "80:80"
 networks:
     nestjs-network:
