@@ -25,6 +25,7 @@ services:
         container_name: nginx
         networks:
             - nestjs-network
+        user: root
         volumes:
             - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:ro
             - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:ro
