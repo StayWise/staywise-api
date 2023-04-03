@@ -22,7 +22,6 @@ services:
             - 3000
         ports:
             - 3000:3000
-            - 9230:9230
         networks:
             - nestjs-network
         volumes:

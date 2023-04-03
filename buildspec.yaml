@@ -17,6 +17,5 @@ phases:
       - docker-compose --file=docker-compose.build.yml push
 artifacts:
   files:
-    - '.ebextensions/*'
     - '.platform/**/*'
     - 'docker-compose.yml'
