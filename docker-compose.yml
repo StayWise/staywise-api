@@ -26,7 +26,7 @@ services:
         networks:
             - nestjs-network
         volumes:
-            - /etc/letsencrypt/live/ebcert/:/etc/letsencrypt/live/ebcert/
+            - /etc/letsencrypt/live/ebcert/:/etc/letsencrypt/live/ebcert:ro
         depends_on: 
             - prod
         ports: 
