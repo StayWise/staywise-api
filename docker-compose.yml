@@ -25,6 +25,8 @@ services:
         container_name: nginx
         networks:
             - nestjs-network
+        volumes:
+            - /etc/letsencrypt/live/ebcert/:/etc/letsencrypt/live/ebcert/
         depends_on: 
             - prod
         ports: 
