@@ -28,5 +28,17 @@ services:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         restart: unless-stopped
+    nginx: 
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
+        container_name: nginx
+        networks:
+            - nestjs-network
+        depends_on: 
+            - prod
+        ports: 
+            - "80:80"
+            - "443:443"
+        build:
+            context: ./nginx
 networks:
     nestjs-network:

@@ -60,5 +60,15 @@ services:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         restart: unless-stopped
+    nginx: 
+        container_name: nginx
+        networks:
+            - nestjs-network
+        depends_on: 
+            - prod
+        ports: 
+            - "80:80"
+        build:
+            context: ./nginx
 networks:
     nestjs-network:
