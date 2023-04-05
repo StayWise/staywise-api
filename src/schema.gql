@@ -95,6 +95,13 @@ input DeletePhotosDTO {
   propertyId: ID!
 }
 
+input EditPropertyDTO {
+  id: ID!
+  managerIds: [ID!]!
+  portfolio: String!
+  type: String!
+}
+
 input ICreateAdminDTO {
   email: String!
   firstName: String!
@@ -140,6 +147,7 @@ type Mutation {
   createProperty(files: [Upload!], input: CreatePropertyDTO!): Boolean!
   deletePropertyPhotos(input: DeletePhotosDTO!): Boolean!
   editAdmin(input: IEditAdminDTO!): Boolean!
+  editProperty(input: EditPropertyDTO!): Boolean!
   loginAdmin(input: ILoginAdminDTO!): LoginAdminModel!
   loginClient(input: ILoginClientDTO!): Boolean!
   updateTenantRequest(input: UpdateTenantRequestDTO!): Boolean!

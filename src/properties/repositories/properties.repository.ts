@@ -138,6 +138,13 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
         return await this.propertiesModel.aggregate(propertiesByQueryAggregation({ images: true }));
     }
 
+    public async editProperty(id: string, { portfolioId, typeId, managerIds
+    } : { portfolioId: string, typeId: string, managerIds: string[] }) {
+        return await this.propertiesModel.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { 
+            $set: { portfolioId, typeId, managerIds }
+        })
+    }
+
     public async createProperty(doc:IProperty) {
         return await this.propertiesModel.create(doc);
     }

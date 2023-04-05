@@ -17,6 +17,7 @@ import { PropertyConnection } from "./connections/property.connection";
 import { ConnectionArguments } from "src/graphql/Connection";
 import { AggregatedPropertyConnection } from "./connections/aggregatedProperty.connection";
 import { PropertiesRepository } from "./repositories/properties.repository";
+import { EditPropertyDTO } from "./dtos/edit-property.dto";
 
 @Resolver(() => PropertyModel)
 export class PropertiesResolver {
@@ -32,6 +33,13 @@ export class PropertiesResolver {
         @Args("input") input : CreatePropertyDTO
     ) : Promise<boolean> {
         await this.propertiesService.create(files, input);
+        return true; 
+    }
+
+    @UseGuards(RootGuard)
+    @Mutation(() => Boolean)
+    async editProperty(@Args("input") input : EditPropertyDTO) {
+        await this.propertiesService.edit(input);
         return true; 
     }
 

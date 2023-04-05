@@ -9,6 +9,7 @@ import { IPropertyPhoto } from "../interfaces/property-photos.interface";
 import * as Sharp from "sharp";
 import { UpdateUnitDTO } from "../dtos/update-unit.dto";
 import { ConnectionArguments } from "src/graphql/Connection";
+import { EditPropertyDTO } from "../dtos/edit-property.dto";
 
 @Injectable()
 export class PropertiesService {
@@ -34,6 +35,22 @@ export class PropertiesService {
 
         await this.addPropertyPhotos(files, property._id.toString());
         
+        return property;
+    }
+
+    async edit(input: EditPropertyDTO) {
+        let type = await this.propertiesRepo.findTypeByQuery(input.type);
+        if (!type) type = await this.propertiesRepo.createType(input.type);
+
+        let portfolio = await this.propertiesRepo.findPortfolioByQuery(input.portfolio);
+        if (!portfolio) portfolio = await this.propertiesRepo.createPortfolio(input.portfolio);
+
+        const property = await this.propertiesRepo.editProperty(input.id, {
+            portfolioId: portfolio._id,
+            typeId: type._id,
+            managerIds: input.managerIds,
+        })
+
         return property;
     }
 

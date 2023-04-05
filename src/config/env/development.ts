@@ -49,7 +49,7 @@ const config = {
     port: 3000,
     origin: {
         whitelist: [
-            "http://localhost:3003", 
+            "http://localhost:3002", 
             "http://localhost:3001"
         ]
     },
