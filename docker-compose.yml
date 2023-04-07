@@ -27,9 +27,8 @@ services:
             - nestjs-network
         user: root
         volumes:
-            - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:ro
-            - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:ro
-            - /etc/letsencrypt/csr:/etc/letsencrypt/csr:ro # temporary reference for validation of volume update 
+            - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:rw
+            - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:rw
         depends_on: 
             - prod
         ports: 
