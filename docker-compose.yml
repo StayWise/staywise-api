@@ -29,7 +29,6 @@ services:
         volumes:
             - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:rw
             - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:rw
-            - /etc/letsencrypt/archive/api.staywiserent.com:/etc/letsencrypt/archive/api.staywiserent.com:rw
         depends_on: 
             - prod
         ports: 
