@@ -3,7 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { join } from "path";
+import { join } from 'path';
 import config from './config';
 import AuthModule from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -15,7 +15,8 @@ import { GCPModule } from './gcp/gcp.module';
 import { PropertiesModule } from './properties/properties.module';
 import { SendgridModule } from './sendgrid/sendgrid.module';
 
-const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+const isDevelopment =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 @Module({
   imports: [
@@ -51,6 +52,6 @@ const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'develop
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(graphqlUploadExpress()).forRoutes("graphql")
+    consumer.apply(graphqlUploadExpress()).forRoutes('graphql');
   }
 }

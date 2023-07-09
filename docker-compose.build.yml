@@ -1,44 +1,44 @@
 version: '3.8'
 
 services:
-    prod:
-        container_name: prod
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-prod
-        build:
-            context: .
-            target: production
-            dockerfile: ./Dockerfile
-        environment:
-            - MONGODB_URI=$MONGODB_URI
-            - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
-            - JWT_SECRET=$JWT_SECRET
-            - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-            - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-            - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-            - GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY
-            - SENDGRID_API_KEY=$SENDGRID_API_KEY
-        command: npm run start:prod
-        expose:
-            - 3000
-        ports:
-            - 3000:3000
-        networks:
-            - nestjs-network
-        volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
-    nginx: 
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
-        container_name: nginx
-        networks:
-            - nestjs-network
-        depends_on: 
-            - prod
-        ports: 
-            - "80:80"
-            - "443:443"
-        build:
-            context: ./nginx
+  prod:
+    container_name: prod
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-prod
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    environment:
+      - MONGODB_URI=$MONGODB_URI
+      - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+      - JWT_SECRET=$JWT_SECRET
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
+    command: npm run start:prod
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    networks:
+      - nestjs-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+  nginx:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
+    container_name: nginx
+    networks:
+      - nestjs-network
+    depends_on:
+      - prod
+    ports:
+      - '80:80'
+      - '443:443'
+    build:
+      context: ./nginx
 networks:
-    nestjs-network:
+  nestjs-network:

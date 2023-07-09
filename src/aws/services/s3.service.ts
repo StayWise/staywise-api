@@ -1,101 +1,101 @@
-import { Injectable } from "@nestjs/common";
-import { FileUpload } from "graphql-upload";
-import config from "../../config";
-const AWS = require("aws-sdk");
-const stream = require("stream");
+import { Injectable } from '@nestjs/common';
+import { FileUpload } from 'graphql-upload';
+import config from '../../config';
+const AWS = require('aws-sdk');
+const stream = require('stream');
 
-AWS.config.update({region: config?.aws?.s3?.region });
+AWS.config.update({ region: config?.aws?.s3?.region });
 const s3 = new AWS.S3({
-    apiVersion: config?.aws?.s3?.apiVersion,
-    accessKeyId: config?.aws?.default?.accessKeyId,
-    secretAccessKey: config?.aws?.default?.secretAccessKey,
+  apiVersion: config?.aws?.s3?.apiVersion,
+  accessKeyId: config?.aws?.default?.accessKeyId,
+  secretAccessKey: config?.aws?.default?.secretAccessKey,
 });
 
 @Injectable()
 export class S3Service {
-    constructor() {}
+  constructor() {}
 
-    async getSignedObjectURL({ key, bucket, expires = 900}) {
-        const signedUrl = s3.getSignedUrl("getObject", {
-            Key: key,
-            Bucket: bucket,
-            Expires: expires, 
-          });
-        
-          return signedUrl;
-    }
+  async getSignedObjectURL({ key, bucket, expires = 900 }) {
+    const signedUrl = s3.getSignedUrl('getObject', {
+      Key: key,
+      Bucket: bucket,
+      Expires: expires,
+    });
 
-    async uploadPrivateObject(bucketName, file: Express.Multer.File, key=null) {
-        const objectKey = `${Date.now().toString()}-${file.originalname}`;
-        var params = {
-            Bucket: bucketName,
-            Key: key ?? objectKey,
-            Body: file.buffer,
-        };
+    return signedUrl;
+  }
 
-        const upload = await new Promise((resolve,reject) => {
-            s3.upload(params, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    reject(null);
-                    return; 
-                } 
-                resolve(data);
-            });
-        });
-        return upload;
-    }
+  async uploadPrivateObject(bucketName, file: Express.Multer.File, key = null) {
+    const objectKey = `${Date.now().toString()}-${file.originalname}`;
+    var params = {
+      Bucket: bucketName,
+      Key: key ?? objectKey,
+      Body: file.buffer,
+    };
 
-    public uploadStreamAsPublicObject(bucketName:string, file:FileUpload) {
-        const objectKey = `${Date.now().toString()}-${file.filename}`;
+    const upload = await new Promise((resolve, reject) => {
+      s3.upload(params, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject(null);
+          return;
+        }
+        resolve(data);
+      });
+    });
+    return upload;
+  }
 
-        const pass = new stream.PassThrough();
-        var params = {
-            Bucket: bucketName,
-            Key: objectKey,
-            Body: pass,
-            ACL: 'public-read'
-        };
-        return {
-            writeStream: pass,
-            promise: s3.upload(params).promise(),
-        };
-    }
+  public uploadStreamAsPublicObject(bucketName: string, file: FileUpload) {
+    const objectKey = `${Date.now().toString()}-${file.filename}`;
 
-    async uploadPublicObject(bucketName, file: Express.Multer.File) {
-        const objectKey = `${Date.now().toString()}-${file.originalname}`;
+    const pass = new stream.PassThrough();
+    var params = {
+      Bucket: bucketName,
+      Key: objectKey,
+      Body: pass,
+      ACL: 'public-read',
+    };
+    return {
+      writeStream: pass,
+      promise: s3.upload(params).promise(),
+    };
+  }
 
-        var params = {
-            Bucket: bucketName,
-            Key: objectKey,
-            Body: file.buffer,
-            ACL: 'public-read'
-        };
+  async uploadPublicObject(bucketName, file: Express.Multer.File) {
+    const objectKey = `${Date.now().toString()}-${file.originalname}`;
 
-        const upload = await new Promise((resolve,reject) => {
-            s3.upload(params, (err, data) => {
-                if (err) {
-                    reject(null);
-                    return; 
-                } 
-                resolve(data);
-            });
-        });
+    var params = {
+      Bucket: bucketName,
+      Key: objectKey,
+      Body: file.buffer,
+      ACL: 'public-read',
+    };
 
-        return upload;
-    }   
+    const upload = await new Promise((resolve, reject) => {
+      s3.upload(params, (err, data) => {
+        if (err) {
+          reject(null);
+          return;
+        }
+        resolve(data);
+      });
+    });
 
-    async deleteObject(bucketName:string, key:string) {
-        const params = {  Bucket: bucketName, Key: key };
-        const deleteRes = await new Promise((resolve, reject) => {
-            s3.deleteObject(params, (err, _) => {
-                if (err) {
-                    reject(false);
-                    return; 
-                }
-                resolve(true)
-              });
-        });
-        return deleteRes; 
-    }
+    return upload;
+  }
+
+  async deleteObject(bucketName: string, key: string) {
+    const params = { Bucket: bucketName, Key: key };
+    const deleteRes = await new Promise((resolve, reject) => {
+      s3.deleteObject(params, (err, _) => {
+        if (err) {
+          reject(false);
+          return;
+        }
+        resolve(true);
+      });
+    });
+    return deleteRes;
+  }
 }

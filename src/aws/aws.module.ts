@@ -1,10 +1,10 @@
-import { Module } from "@nestjs/common";
-import { S3Service } from "./services/s3.service";
+import { Module } from '@nestjs/common';
+import { S3Service } from './services/s3.service';
 
 @Module({
-    imports: [],
-    providers: [ S3Service ],
-    exports: [ S3Service ],
-    controllers: [],
+  imports: [],
+  providers: [S3Service],
+  exports: [S3Service],
+  controllers: [],
 })
 export class AWSModule {}

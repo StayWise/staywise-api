@@ -1,4 +1,4 @@
 export interface IPropertyTypes {
-    _id?: string; 
-    name?: string;
+  _id?: string;
+  name?: string;
 }

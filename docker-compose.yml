@@ -1,38 +1,38 @@
 version: '3.8'
 
 services:
-    prod:
-        container_name: prod
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-prod
-        ports:
-            - 3000:3000
-        environment:
-            - MONGODB_URI=$MONGODB_URI
-            - JWT_SECRET=$JWT_SECRET
-            - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
-            - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-            - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-            - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-            - GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY
-            - SENDGRID_API_KEY=$SENDGRID_API_KEY
-        expose: 
-            - 3000
-        networks:
-            - nestjs-network
-        restart: unless-stopped
-    nginx: 
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
-        container_name: nginx
-        networks:
-            - nestjs-network
-        user: root
-        volumes:
-            - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:rw
-            - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:rw
-        depends_on: 
-            - prod
-        ports: 
-            - "80:80"
-            - "443:443"
+  prod:
+    container_name: prod
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-prod
+    ports:
+      - 3000:3000
+    environment:
+      - MONGODB_URI=$MONGODB_URI
+      - JWT_SECRET=$JWT_SECRET
+      - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY
+      - SENDGRID_API_KEY=$SENDGRID_API_KEY
+    expose:
+      - 3000
+    networks:
+      - nestjs-network
+    restart: unless-stopped
+  nginx:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/staywise-api-nginx
+    container_name: nginx
+    networks:
+      - nestjs-network
+    user: root
+    volumes:
+      - /etc/letsencrypt/live/ebcert/fullchain.pem:/etc/letsencrypt/live/ebcert/fullchain.pem:rw
+      - /etc/letsencrypt/live/ebcert/privkey.pem:/etc/letsencrypt/live/ebcert/privkey.pem:rw
+    depends_on:
+      - prod
+    ports:
+      - '80:80'
+      - '443:443'
 networks:
-    nestjs-network:
+  nestjs-network:

@@ -1,43 +1,46 @@
-import { getPropertiesAggregation } from "./properties.aggregation";
+import { getPropertiesAggregation } from './properties.aggregation';
 
-interface IPropertyAggregationOptions { 
-    query?: string, 
-    images?:boolean, 
-    unitDetails?:boolean
+interface IPropertyAggregationOptions {
+  query?: string;
+  images?: boolean;
+  unitDetails?: boolean;
 }
 
-export const propertiesByQueryAggregation = ({ query = "", images = false, unitDetails = false } : IPropertyAggregationOptions) => {
-    const pipeline = [];
-    
-    if (query) {
-        pipeline.push({
-            $search: {
-                index: "property-search",
-                compound: {
-                    should: [
-                        {
-                            text: {
-                                query,
-                                path: {
-                                    wildcard: '*'
-                                }
-                            }
-                        },
-                        {
-                            autocomplete: {
-                                path: "address.description",
-                                query,
-                            }
-                        }
-                    ],
-                    minimumShouldMatch: 1
-                }
-            }
-        })
-    }
+export const propertiesByQueryAggregation = ({
+  query = '',
+  images = false,
+  unitDetails = false,
+}: IPropertyAggregationOptions) => {
+  const pipeline = [];
 
-    pipeline.push(...getPropertiesAggregation({ images, unitDetails }));
+  if (query) {
+    pipeline.push({
+      $search: {
+        index: 'property-search',
+        compound: {
+          should: [
+            {
+              text: {
+                query,
+                path: {
+                  wildcard: '*',
+                },
+              },
+            },
+            {
+              autocomplete: {
+                path: 'address.description',
+                query,
+              },
+            },
+          ],
+          minimumShouldMatch: 1,
+        },
+      },
+    });
+  }
 
-    return pipeline; 
-}
+  pipeline.push(...getPropertiesAggregation({ images, unitDetails }));
 
+  return pipeline;
+};

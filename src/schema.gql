@@ -248,7 +248,11 @@ type Query {
   getAdmins: [AdminModel!]!
   getAggregatedProperties: [AggregatedPropertyModel!]!
   getAggregatedPropertiesByQuery(query: String!): [AggregatedPropertyModel!]!
-  getAggregatedPropertiesConnection(limit: Float, query: String!, skip: Float = 0): AggregatedPropertyConnection!
+  getAggregatedPropertiesConnection(
+    limit: Float
+    query: String!
+    skip: Float = 0
+  ): AggregatedPropertyConnection!
   getAggregatedPropertyById(id: String!): AggregatedPropertyModel!
   getManagers: [AdminModel!]!
   getProperties: [PropertyModel!]!
@@ -290,7 +294,9 @@ input UpdateUnitDTO {
   unitNumber: Float!
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""
+The `Upload` scalar type represents a file upload.
+"""
 scalar Upload
 
 type UserModel {
