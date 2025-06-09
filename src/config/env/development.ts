@@ -42,7 +42,7 @@ const config = {
     },
   },
   sendgrid: {
-    key: 'REDACTED',
+    key: process.env.SENDGRID_API_KEY,
     from: 'noreply@staywiserent.com',
     to: 'contact+dev@staywiserent.com',
   },
