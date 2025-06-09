@@ -1,6 +1,6 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { AddressModel } from 'src/properties/models/address.model';
-import { PropertyModel } from 'src/properties/models/property.model';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { AddressModel } from "src/properties/models/address.model";
+import { PropertyModel } from "src/properties/models/property.model";
 
 @ObjectType()
 export class RentalRequestModel {

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
@@ -67,7 +67,7 @@ services:
     depends_on:
       - prod
     ports:
-      - '80:80'
+      - "80:80"
     build:
       context: ./nginx
 networks:

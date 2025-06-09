@@ -4,17 +4,17 @@ export const propertyTypesAggregation = (query: string) => {
   if (query) {
     pipeline.push({
       $search: {
-        index: 'property-types-search',
+        index: "property-types-search",
         autocomplete: {
-          path: 'name',
-          query,
-        },
-      },
+          path: "name",
+          query
+        }
+      }
     });
   }
 
   pipeline.push({
-    $limit: 15,
+    $limit: 15
   });
 
   return pipeline;

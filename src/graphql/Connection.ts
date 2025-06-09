@@ -1,13 +1,12 @@
-import { Type } from '@nestjs/common';
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
+import { Type } from "@nestjs/common";
+import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
 import {
   Connection as RelayConnection,
-  Edge as RelayEdge,
-  PageInfo as RelayPageInfo,
-} from 'graphql-relay';
+  Edge as RelayEdge
+} from "graphql-relay";
 
 export function Connection<GraphQLObject>(
-  GenericClass?: Type<GraphQLObject>,
+  GenericClass?: Type<GraphQLObject>
 ): any {
   @ObjectType(`${GenericClass.name}Edge`, { isAbstract: true })
   abstract class Edge<GraphQLObject> implements RelayEdge<GraphQLObject> {
@@ -32,7 +31,7 @@ export function Connection<GraphQLObject>(
 
   @ObjectType({ isAbstract: true })
   abstract class IConnection
-    implements Omit<RelayConnection<GraphQLObject>, 'pageInfo'>
+    implements Omit<RelayConnection<GraphQLObject>, "pageInfo">
   {
     @Field(() => [Edge], { nullable: false })
     edges: Array<RelayEdge<GraphQLObject>>;

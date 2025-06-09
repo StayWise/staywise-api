@@ -1,21 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { getAdminsAggregation } from '../aggregations/admins.aggregation';
-import { getRentalRequestsAggregation } from '../aggregations/getRentalRequest.aggregation';
-import { UpdateTenantRequestDTO } from '../dtos/updateTenantRequest.dto';
-import { ERoles } from '../enums/roles.enum';
-import { ITenantRequest } from '../interfaces/tenantRequest.interface';
-import { IUser } from '../interfaces/user.interface';
-import * as mongoose from 'mongoose';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { getAdminsAggregation } from "../aggregations/admins.aggregation";
+import { getRentalRequestsAggregation } from "../aggregations/getRentalRequest.aggregation";
+import { UpdateTenantRequestDTO } from "../dtos/updateTenantRequest.dto";
+import { ERoles } from "../enums/roles.enum";
+import { ITenantRequest } from "../interfaces/tenantRequest.interface";
+import { IUser } from "../interfaces/user.interface";
+import * as mongoose from "mongoose";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectModel('user')
+    @InjectModel("user")
     private readonly userModel: Model<IUser>,
-    @InjectModel('tenant-requests')
-    private readonly tenantRequestModel: Model<any>,
+    @InjectModel("tenant-requests")
+    private readonly tenantRequestModel: Model<any>
   ) {}
 
   async findById(_id: string) {
@@ -25,11 +25,11 @@ export class UserRepository {
   async updateTenantRequest({ _id, ...input }: UpdateTenantRequestDTO) {
     return await this.tenantRequestModel.updateOne(
       {
-        _id: new mongoose.Types.ObjectId(_id),
+        _id: new mongoose.Types.ObjectId(_id)
       },
       {
-        $set: { ...input },
-      },
+        $set: { ...input }
+      }
     );
   }
 
@@ -39,7 +39,7 @@ export class UserRepository {
 
   async getRentalRequests() {
     return await this.tenantRequestModel.aggregate(
-      getRentalRequestsAggregation(),
+      getRentalRequestsAggregation()
     );
   }
 
@@ -53,7 +53,7 @@ export class UserRepository {
 
   async getAggregatedAdmins() {
     return await this.userModel.aggregate(
-      getAdminsAggregation([ERoles.MANAGER, ERoles.ROOT]),
+      getAdminsAggregation([ERoles.MANAGER, ERoles.ROOT])
     );
   }
 
@@ -63,7 +63,7 @@ export class UserRepository {
 
   async getManagers() {
     return await this.userModel.aggregate(
-      getAdminsAggregation([ERoles.MANAGER]),
+      getAdminsAggregation([ERoles.MANAGER])
     );
   }
 }

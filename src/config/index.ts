@@ -1,18 +1,18 @@
-import * as _ from 'lodash';
-import * as nconf from 'nconf';
-const staticConfig = require('./static/index');
+import * as _ from "lodash";
+import * as nconf from "nconf";
+const staticConfig = require("./static/index");
 
-require('dotenv').config();
+require("dotenv").config();
 
-const environment = process.env.NODE_ENV || 'development';
+const environment = process.env.NODE_ENV || "development";
 const config: any = _.extend(
   {
     ...staticConfig,
-    environment,
+    environment
   },
   // tslint:disable-next-line: no-var-requires
   require(`${__dirname}/env/${environment}`),
-  nconf.get(),
+  nconf.get()
 );
 
 export default config;

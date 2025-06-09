@@ -1,5 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { PropertyPhoto } from './property-photo.model';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { PropertyPhoto } from "./property-photo.model";
 
 @ObjectType()
 export class PropertyGroupedByStateModel {

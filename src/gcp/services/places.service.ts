@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import config from '../../config';
-import axios from 'axios';
-import { AddressesModel } from '../models/addresses.model';
-import { getAddressObject } from '../utils/parse-address-components';
+import { Injectable } from "@nestjs/common";
+import config from "../../config";
+import axios from "axios";
+import { AddressesModel } from "../models/addresses.model";
+import { getAddressObject } from "../utils/parse-address-components";
 
 const placesAPIBaseURL = config?.google?.placesAPI?.baseURL;
 const placesAPIapiKey = config?.google?.placesAPI?.apiKey;

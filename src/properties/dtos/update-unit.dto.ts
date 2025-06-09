@@ -1,5 +1,5 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import { EUnitStatus } from '../enums/unit-status.enum';
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { EUnitStatus } from "../enums/unit-status.enum";
 
 @InputType()
 export class UpdateUnitDTO {

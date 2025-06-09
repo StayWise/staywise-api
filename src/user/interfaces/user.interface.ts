@@ -1,6 +1,6 @@
-import { Types } from 'mongoose';
-import { ERoles } from '../enums/roles.enum';
-import { EStatus } from '../enums/status.enum';
+import { Types } from "mongoose";
+import { ERoles } from "../enums/roles.enum";
+import { EStatus } from "../enums/status.enum";
 
 export interface IUser {
   _id?: Types.ObjectId;

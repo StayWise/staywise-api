@@ -4,17 +4,17 @@ export const propertyPortfoliosAggregation = (query: string) => {
   if (query) {
     pipeline.push({
       $search: {
-        index: 'portfolio-search',
+        index: "portfolio-search",
         autocomplete: {
-          path: 'name',
-          query,
-        },
-      },
+          path: "name",
+          query
+        }
+      }
     });
   }
 
   pipeline.push({
-    $limit: 15,
+    $limit: 15
   });
 
   return pipeline;

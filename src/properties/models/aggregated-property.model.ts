@@ -1,9 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { PropertyModel } from './property.model';
-import { UserModel } from 'src/user/models/user.model';
-import { PropertyPortfolioModel } from './property-portfolio.model';
-import { PropertyTypesModel } from './property-types.model';
-import { PropertyPhoto } from './property-photo.model';
+import { Field, ObjectType } from "@nestjs/graphql";
+import { PropertyModel } from "./property.model";
+import { UserModel } from "src/user/models/user.model";
+import { PropertyPortfolioModel } from "./property-portfolio.model";
+import { PropertyTypesModel } from "./property-types.model";
+import { PropertyPhoto } from "./property-photo.model";
 
 @ObjectType()
 class PropertyUnitBedroomDetails {

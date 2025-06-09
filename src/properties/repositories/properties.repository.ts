@@ -1,34 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { propertiesByQueryAggregation } from '../aggregations/propertiesByQuery.aggregation';
-import { propertiesSearchQueryAggregation } from '../aggregations/propertiesSearchQuery.aggregation';
-import { propertiesGroupedByStateAggregation } from '../aggregations/propertiesGroupedByState.aggregation';
-import { propertyPortfoliosAggregation } from '../aggregations/property-portfolios.aggregation';
-import { propertyTypesAggregation } from '../aggregations/property-types.aggregation';
-import { IProperty } from '../interfaces/properties.interface';
-import { IPropertyPhoto } from '../interfaces/property-photos.interface';
-import { IPropertyPortfolio } from '../interfaces/property-portfolio.interface';
-import { IPropertyTypes } from '../interfaces/property-type.interface';
-import { IPropertyUnit } from '../interfaces/property-unit.interface';
-import * as mongoose from 'mongoose';
-import { getPropertiesAggregation } from '../aggregations/properties.aggregation';
-import { RelayRepositry } from 'src/graphql/relay.repository';
-import { ConnectionArguments } from 'src/graphql/Connection';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { propertiesByQueryAggregation } from "../aggregations/propertiesByQuery.aggregation";
+import { propertiesSearchQueryAggregation } from "../aggregations/propertiesSearchQuery.aggregation";
+import { propertiesGroupedByStateAggregation } from "../aggregations/propertiesGroupedByState.aggregation";
+import { propertyPortfoliosAggregation } from "../aggregations/property-portfolios.aggregation";
+import { propertyTypesAggregation } from "../aggregations/property-types.aggregation";
+import { IProperty } from "../interfaces/properties.interface";
+import { IPropertyPhoto } from "../interfaces/property-photos.interface";
+import { IPropertyPortfolio } from "../interfaces/property-portfolio.interface";
+import { IPropertyTypes } from "../interfaces/property-type.interface";
+import { IPropertyUnit } from "../interfaces/property-unit.interface";
+import * as mongoose from "mongoose";
+import { getPropertiesAggregation } from "../aggregations/properties.aggregation";
+import { RelayRepositry } from "src/graphql/relay.repository";
+import { ConnectionArguments } from "src/graphql/Connection";
 
 @Injectable()
 export class PropertiesRepository extends RelayRepositry<IProperty> {
   constructor(
-    @InjectModel('property-portfolios')
+    @InjectModel("property-portfolios")
     private readonly propertyPortfoliosModel: Model<IPropertyPortfolio>,
-    @InjectModel('property-types')
+    @InjectModel("property-types")
     private readonly propertyTypesModel: Model<IPropertyTypes>,
-    @InjectModel('properties')
+    @InjectModel("properties")
     private readonly propertiesModel: Model<IProperty>,
-    @InjectModel('property-photos')
+    @InjectModel("property-photos")
     private readonly propertyPhotosModel: Model<IPropertyPhoto>,
-    @InjectModel('property-units')
-    private readonly propertyUnits: Model<IPropertyUnit>,
+    @InjectModel("property-units")
+    private readonly propertyUnits: Model<IPropertyUnit>
   ) {
     super(propertiesModel);
   }
@@ -36,16 +36,16 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
   public async findByIdWithManagersEmails(_id: mongoose.Types.ObjectId) {
     const [response] = await this.propertiesModel.aggregate([
       {
-        $match: { _id },
+        $match: { _id }
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'managerIds',
-          foreignField: '_id',
-          as: 'managers',
-        },
-      },
+          from: "users",
+          localField: "managerIds",
+          foreignField: "_id",
+          as: "managers"
+        }
+      }
     ]);
     return response;
   }
@@ -54,14 +54,14 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
     return await this.propertiesModel.aggregate(
       propertiesGroupedByStateAggregation(),
       {
-        allowDiskUse: true,
-      },
+        allowDiskUse: true
+      }
     );
   }
 
   public async getUnits(propertyId: string) {
     return await this.propertyUnits.aggregate([
-      { $match: { propertyId: new mongoose.Types.ObjectId(propertyId) } },
+      { $match: { propertyId: new mongoose.Types.ObjectId(propertyId) } }
     ]);
   }
 
@@ -69,20 +69,20 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
     return await this.propertyUnits.updateOne(
       { unitNumber },
       { ...doc },
-      { upsert: true },
+      { upsert: true }
     );
   }
 
   public async deletePropertyPhotosByKey(keys: string[], propertyId) {
     return await this.propertyPhotosModel.deleteMany({
       key: { $in: keys },
-      propertyId,
+      propertyId
     });
   }
 
   public async getPropertyPhotosByPropertyId(
     propertyId: string,
-    limit?: number,
+    limit?: number
   ) {
     return await this.propertyPhotosModel
       .find({ propertyId })
@@ -94,17 +94,17 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
       {
         $match: {
           _id: { $in: photoIds.map((id) => new mongoose.Types.ObjectId(id)) },
-          propertyId: new mongoose.Types.ObjectId(propertyId),
-        },
+          propertyId: new mongoose.Types.ObjectId(propertyId)
+        }
       },
       {
         $group: {
           _id: null,
           keys: {
-            $addToSet: '$key',
-          },
-        },
-      },
+            $addToSet: "$key"
+          }
+        }
+      }
     ]);
     return response;
   }
@@ -113,27 +113,27 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
     const properties = await this.propertiesModel.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(id),
-        },
+          _id: new mongoose.Types.ObjectId(id)
+        }
       },
-      ...getPropertiesAggregation({ images: true, unitDetails: true }),
+      ...getPropertiesAggregation({ images: true, unitDetails: true })
     ]);
     return properties.length ? properties[0] : null;
   }
 
   public async getAggregatedPropertiesByQuery(query: string) {
     return await this.propertiesModel.aggregate(
-      propertiesByQueryAggregation({ query, images: true, unitDetails: true }),
+      propertiesByQueryAggregation({ query, images: true, unitDetails: true })
     );
   }
 
   public async getAggregatedPropertiesByQueryConnection(
     args: ConnectionArguments,
-    query: string,
+    query: string
   ) {
     return await this.findAll(
       args,
-      propertiesByQueryAggregation({ query, images: true, unitDetails: true }),
+      propertiesByQueryAggregation({ query, images: true, unitDetails: true })
     );
   }
 
@@ -147,7 +147,7 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
 
   public async getPropertiesByQuery(query: string) {
     return await this.propertiesModel.aggregate(
-      propertiesSearchQueryAggregation(query),
+      propertiesSearchQueryAggregation(query)
     );
   }
 
@@ -157,7 +157,7 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
 
   public async getAggregatedProperties() {
     return await this.propertiesModel.aggregate(
-      propertiesByQueryAggregation({ images: true }),
+      propertiesByQueryAggregation({ images: true })
     );
   }
 
@@ -166,14 +166,14 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
     {
       portfolioId,
       typeId,
-      managerIds,
-    }: { portfolioId: string; typeId: string; managerIds: string[] },
+      managerIds
+    }: { portfolioId: string; typeId: string; managerIds: string[] }
   ) {
     return await this.propertiesModel.updateOne(
       { _id: new mongoose.Types.ObjectId(id) },
       {
-        $set: { portfolioId, typeId, managerIds },
-      },
+        $set: { portfolioId, typeId, managerIds }
+      }
     );
   }
 
@@ -193,15 +193,15 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
     return await this.propertyPortfoliosModel
       .findOne({ name: query })
       .collation({
-        locale: 'en',
-        strength: 1,
+        locale: "en",
+        strength: 1
       });
   }
 
   public async findTypeByQuery(query: string) {
     return await this.propertyTypesModel.findOne({ name: query }).collation({
-      locale: 'en',
-      strength: 1,
+      locale: "en",
+      strength: 1
     });
   }
 

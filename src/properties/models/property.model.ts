@@ -1,5 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { AddressModel } from './address.model';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { AddressModel } from "./address.model";
 
 @ObjectType()
 export class PropertyModel {

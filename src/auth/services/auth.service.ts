@@ -1,20 +1,20 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
-import { ILoginClientDTO } from '../dtos/loginClient.dto';
-import * as bcrypt from 'bcryptjs';
-import { UserService } from 'src/user/services/user.service';
-import { SignOptions } from 'jsonwebtoken';
-import { JwtService } from '@nestjs/jwt';
-import config from 'src/config';
+  Injectable
+} from "@nestjs/common";
+import { ILoginClientDTO } from "../dtos/loginClient.dto";
+import * as bcrypt from "bcryptjs";
+import { UserService } from "src/user/services/user.service";
+import { SignOptions } from "jsonwebtoken";
+import { JwtService } from "@nestjs/jwt";
+import config from "src/config";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   async loginClient({ email, pass }: ILoginClientDTO) {
@@ -22,9 +22,9 @@ export class AuthService {
       .findByEmail(email?.toLowerCase())
       .catch(() => null);
     if (!user || !user.pass)
-      throw new BadRequestException('No Such Account Exists!');
+      throw new BadRequestException("No Such Account Exists!");
     else if (!(await this.validateUserPassword(pass, user.pass)))
-      throw new ForbiddenException('Access Denied!');
+      throw new ForbiddenException("Access Denied!");
     return user;
   }
 
@@ -40,7 +40,7 @@ export class AuthService {
 
   private async validateUserPassword(
     password: string,
-    hashedPassword: string,
+    hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }

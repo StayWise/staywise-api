@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { GoogleMapsService } from 'src/gcp/services/places.service';
-import { PropertiesRepository } from 'src/properties/repositories/properties.repository';
-import { SendgridService } from 'src/sendgrid/services/sendgrid.service';
-import { NewTenantRequestFormDTO } from '../dtos/newTenantRequestForm.dto';
-import { IUser } from '../interfaces/user.interface';
-import { UserRepository } from '../repositories/user.repository';
-import * as mongoose from 'mongoose';
-import { EMeetFormStatus } from '../enums/meet-form-status.enum';
-import { UpdateTenantRequestDTO } from '../dtos/updateTenantRequest.dto';
-import config from 'src/config';
-const moment = require('moment');
+import { Injectable } from "@nestjs/common";
+import { GoogleMapsService } from "src/gcp/services/places.service";
+import { PropertiesRepository } from "src/properties/repositories/properties.repository";
+import { SendgridService } from "src/sendgrid/services/sendgrid.service";
+import { NewTenantRequestFormDTO } from "../dtos/newTenantRequestForm.dto";
+import { IUser } from "../interfaces/user.interface";
+import { UserRepository } from "../repositories/user.repository";
+import * as mongoose from "mongoose";
+import { EMeetFormStatus } from "../enums/meet-form-status.enum";
+import { UpdateTenantRequestDTO } from "../dtos/updateTenantRequest.dto";
+import config from "src/config";
+const moment = require("moment");
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
     private readonly userRepo: UserRepository,
     private readonly placesService: GoogleMapsService,
     private readonly sendGridService: SendgridService,
-    private readonly propertiesRepository: PropertiesRepository,
+    private readonly propertiesRepository: PropertiesRepository
   ) {}
 
   async createNewTenantRequest(input: NewTenantRequestFormDTO) {
@@ -30,13 +30,13 @@ export class UserService {
       requiredBy,
       address,
       propertyId,
-      propertyAddress,
+      propertyAddress
     } = input;
     const [matchedAddress] = await this.placesService.getAddresses(address);
     let geocode = {};
     if (matchedAddress && matchedAddress.place_id) {
       geocode = await this.placesService.getAddressGeocode(
-        matchedAddress.place_id,
+        matchedAddress.place_id
       );
     }
 
@@ -51,9 +51,9 @@ export class UserService {
         phone: String(phone),
         address: {
           description: address,
-          ...geocode,
+          ...geocode
         },
-        propertyId,
+        propertyId
       })
       .catch((e) => {
         console.log(e);
@@ -64,40 +64,40 @@ export class UserService {
       const [photo] =
         await this.propertiesRepository.getPropertyPhotosByPropertyId(
           propertyId,
-          1,
+          1
         );
       const { managers, address: propertyAddress } =
         await this.propertiesRepository.findByIdWithManagersEmails(
-          new mongoose.Types.ObjectId(propertyId),
+          new mongoose.Types.ObjectId(propertyId)
         );
 
       const formNotificationFields = {
         propertyAddress: propertyAddress.description,
         email,
-        requiredBy: moment(requiredBy).format('MMMM Do YYYY'),
+        requiredBy: moment(requiredBy).format("MMMM Do YYYY"),
         phone,
         address,
         additionalInfo,
         firstName,
-        lastName,
+        lastName
       };
 
       const managerEmails = managers.map(
-        (manager: IUser): string => manager.email,
+        (manager: IUser): string => manager.email
       );
 
       await Promise.all(
         managerEmails.map(async (email: string) => {
           return await this.sendGridService.sendMeetFormNotification({
             to: email,
-            fields: formNotificationFields,
+            fields: formNotificationFields
           });
-        }),
+        })
       );
 
       await this.sendGridService.sendMeetFormNotification({
         to: config.sendgrid.to,
-        fields: formNotificationFields,
+        fields: formNotificationFields
       });
 
       await this.sendGridService
@@ -105,7 +105,7 @@ export class UserService {
           to: email,
           address: propertyAddress.description,
           name: firstName,
-          url: photo?.url || '',
+          url: photo?.url || ""
         })
         .catch((e) => console.log(e));
     }

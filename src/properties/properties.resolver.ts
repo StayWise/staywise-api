@@ -1,37 +1,39 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreatePropertyDTO } from './dtos/create-property.dto';
-import { AggregatedPropertyModel } from './models/aggregated-property.model';
-import { PropertyPortfolioModel } from './models/property-portfolio.model';
-import { PropertyTypesModel } from './models/property-types.model';
-import { PropertiesService } from './services/properties.service';
-import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import { PropertyGroupedByStateModel } from './models/properties-grouped-by-state.model';
-import { PropertyModel } from './models/property.model';
-import { UpdateUnitDTO } from './dtos/update-unit.dto';
-import { PropertyUnitModel } from './models/property-unit.model';
-import { DeletePhotosDTO } from './dtos/delete-property.dto';
-import { UseGuards } from '@nestjs/common';
-import { RootGuard } from 'src/auth/guards/root.guard';
-import { IProperty } from './interfaces/properties.interface';
-import { PropertyConnection } from './connections/property.connection';
-import { ConnectionArguments } from 'src/graphql/Connection';
-import { AggregatedPropertyConnection } from './connections/aggregatedProperty.connection';
-import { PropertiesRepository } from './repositories/properties.repository';
-import { EditPropertyDTO } from './dtos/edit-property.dto';
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { CreatePropertyDTO } from "./dtos/create-property.dto";
+import { AggregatedPropertyModel } from "./models/aggregated-property.model";
+import { PropertyPortfolioModel } from "./models/property-portfolio.model";
+import { PropertyTypesModel } from "./models/property-types.model";
+import { PropertiesService } from "./services/properties.service";
+import { FileUpload } from "graphql-upload/processRequest.mjs";
+import { PropertyGroupedByStateModel } from "./models/properties-grouped-by-state.model";
+import { PropertyModel } from "./models/property.model";
+import { UpdateUnitDTO } from "./dtos/update-unit.dto";
+import { PropertyUnitModel } from "./models/property-unit.model";
+import { DeletePhotosDTO } from "./dtos/delete-property.dto";
+import { UseGuards } from "@nestjs/common";
+import { RootGuard } from "src/auth/guards/root.guard";
+import { IProperty } from "./interfaces/properties.interface";
+import { PropertyConnection } from "./connections/property.connection";
+import { ConnectionArguments } from "src/graphql/Connection";
+import { AggregatedPropertyConnection } from "./connections/aggregatedProperty.connection";
+import { PropertiesRepository } from "./repositories/properties.repository";
+import { EditPropertyDTO } from "./dtos/edit-property.dto";
+
+import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 
 @Resolver(() => PropertyModel)
 export class PropertiesResolver {
   constructor(
     private readonly propertiesService: PropertiesService,
-    private readonly propertiesRepo: PropertiesRepository,
+    private readonly propertiesRepo: PropertiesRepository
   ) {}
 
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
   async createProperty(
-    @Args({ name: 'files', type: () => [GraphQLUpload], nullable: true })
+    @Args({ name: "files", type: () => [GraphQLUpload], nullable: true })
     files: FileUpload[],
-    @Args('input') input: CreatePropertyDTO,
+    @Args("input") input: CreatePropertyDTO
   ): Promise<boolean> {
     await this.propertiesService.create(files, input);
     return true;
@@ -39,7 +41,7 @@ export class PropertiesResolver {
 
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
-  async editProperty(@Args('input') input: EditPropertyDTO) {
+  async editProperty(@Args("input") input: EditPropertyDTO) {
     await this.propertiesService.edit(input);
     return true;
   }
@@ -47,9 +49,9 @@ export class PropertiesResolver {
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
   async addPropertyPhotos(
-    @Args({ name: 'files', type: () => [GraphQLUpload], nullable: true })
+    @Args({ name: "files", type: () => [GraphQLUpload], nullable: true })
     files: FileUpload[],
-    @Args('propertyId') propertyId: string,
+    @Args("propertyId") propertyId: string
   ): Promise<boolean> {
     await this.propertiesService.addPropertyPhotos(files, propertyId);
     return true;
@@ -57,7 +59,7 @@ export class PropertiesResolver {
 
   @Query(() => [PropertyModel])
   async getPropertiesByQuery(
-    @Args('query') query: string,
+    @Args("query") query: string
   ): Promise<PropertyModel[]> {
     return await this.propertiesService.getPropertiesByQuery(query);
   }
@@ -65,7 +67,7 @@ export class PropertiesResolver {
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
   async deletePropertyPhotos(
-    @Args('input') { photoIds, propertyId }: DeletePhotosDTO,
+    @Args("input") { photoIds, propertyId }: DeletePhotosDTO
   ): Promise<boolean> {
     await this.propertiesService.deletePropertyPhotos(photoIds, propertyId);
     return true;
@@ -73,7 +75,7 @@ export class PropertiesResolver {
 
   @Query(() => [AggregatedPropertyModel])
   async getAggregatedPropertiesByQuery(
-    @Args('query') query: string,
+    @Args("query") query: string
   ): Promise<AggregatedPropertyModel[]> {
     return await this.propertiesService.getAggregatedPropertiesByQuery(query);
   }
@@ -85,7 +87,7 @@ export class PropertiesResolver {
 
   @Query(() => AggregatedPropertyModel)
   async getAggregatedPropertyById(
-    @Args('id') id: string,
+    @Args("id") id: string
   ): Promise<AggregatedPropertyModel> {
     return await this.propertiesService.getAggregatedPropertyById(id);
   }
@@ -108,43 +110,43 @@ export class PropertiesResolver {
   @Query(() => AggregatedPropertyConnection)
   async getAggregatedPropertiesConnection(
     @Args() args: ConnectionArguments,
-    @Args('query') query: string,
+    @Args("query") query: string
   ) {
     const { count, edges } =
       await this.propertiesRepo.getAggregatedPropertiesByQueryConnection(
         args,
-        query,
+        query
       );
     return {
       edges: edges.map((e) => ({
-        node: e,
+        node: e
       })),
       page: {
         skip: args.skip || 0,
         limit: args.limit,
-        count: count,
-      },
+        count: count
+      }
     };
   }
 
   @Query(() => [PropertyPortfolioModel])
   async getPropertyPortfolios(
-    @Args('query', { nullable: true }) query: string | null,
+    @Args("query", { nullable: true }) query: string | null
   ): Promise<PropertyPortfolioModel[]> {
-    return await this.propertiesService.getPropertyPortfolios(query || '');
+    return await this.propertiesService.getPropertyPortfolios(query || "");
   }
 
   @UseGuards(RootGuard)
   @Query(() => [PropertyTypesModel])
   async getPropertyTypes(
-    @Args('query', { nullable: true }) query: string | null,
+    @Args("query", { nullable: true }) query: string | null
   ): Promise<PropertyTypesModel[]> {
-    return await this.propertiesService.getPropertyTypes(query || '');
+    return await this.propertiesService.getPropertyTypes(query || "");
   }
 
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
-  async updateUnit(@Args('input') input: UpdateUnitDTO): Promise<boolean> {
+  async updateUnit(@Args("input") input: UpdateUnitDTO): Promise<boolean> {
     await this.propertiesService.updateUnit(input);
     return true;
   }
@@ -152,7 +154,7 @@ export class PropertiesResolver {
   @UseGuards(RootGuard)
   @Query(() => [PropertyUnitModel])
   async getUnits(
-    @Args('propertyId') propertyId: string,
+    @Args("propertyId") propertyId: string
   ): Promise<PropertyUnitModel[]> {
     return await this.propertiesService.getUnits(propertyId);
   }

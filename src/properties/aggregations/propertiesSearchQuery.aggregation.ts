@@ -4,32 +4,32 @@ export const propertiesSearchQueryAggregation = (query: string) => {
   if (query) {
     pipeline.push({
       $search: {
-        index: 'property-search',
+        index: "property-search",
         compound: {
           should: [
             {
               text: {
                 query,
                 path: {
-                  wildcard: '*',
-                },
-              },
+                  wildcard: "*"
+                }
+              }
             },
             {
               autocomplete: {
-                path: 'address.description',
-                query,
-              },
-            },
+                path: "address.description",
+                query
+              }
+            }
           ],
-          minimumShouldMatch: 1,
-        },
-      },
+          minimumShouldMatch: 1
+        }
+      }
     });
   }
 
   pipeline.push({
-    $limit: 75,
+    $limit: 75
   });
 
   return pipeline;

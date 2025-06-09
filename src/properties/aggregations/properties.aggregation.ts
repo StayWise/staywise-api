@@ -5,51 +5,51 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
     ...[
       {
         $lookup: {
-          from: 'property-types',
-          localField: 'typeId',
-          foreignField: '_id',
-          as: 'type',
-        },
+          from: "property-types",
+          localField: "typeId",
+          foreignField: "_id",
+          as: "type"
+        }
       },
       {
         $unwind: {
-          path: '$type',
-          preserveNullAndEmptyArrays: true,
-        },
+          path: "$type",
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $lookup: {
-          from: 'property-portfolios',
-          localField: 'portfolioId',
-          foreignField: '_id',
-          as: 'portfolio',
-        },
+          from: "property-portfolios",
+          localField: "portfolioId",
+          foreignField: "_id",
+          as: "portfolio"
+        }
       },
       {
         $unwind: {
-          path: '$portfolio',
-          preserveNullAndEmptyArrays: true,
-        },
+          path: "$portfolio",
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'managerIds',
-          foreignField: '_id',
-          as: 'managers',
-        },
-      },
-    ],
+          from: "users",
+          localField: "managerIds",
+          foreignField: "_id",
+          as: "managers"
+        }
+      }
+    ]
   );
 
   if (images) {
     pipeline.push({
       $lookup: {
-        from: 'property-photos',
-        localField: '_id',
-        foreignField: 'propertyId',
-        as: 'images',
-      },
+        from: "property-photos",
+        localField: "_id",
+        foreignField: "propertyId",
+        as: "images"
+      }
     });
   }
 
@@ -58,9 +58,9 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
       ...[
         {
           $lookup: {
-            from: 'property-units',
+            from: "property-units",
             let: {
-              propertyId: '$_id',
+              propertyId: "$_id"
             },
             pipeline: [
               {
@@ -68,7 +68,7 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: ['$propertyId', '$$propertyId'],
+                        $eq: ["$propertyId", "$$propertyId"]
                       },
                       {
                         // '$not': {
@@ -78,48 +78,48 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
                         //     ]
                         //     ]
                         // }
-                      },
-                    ],
-                  },
-                },
+                      }
+                    ]
+                  }
+                }
               },
               {
                 $group: {
                   _id: null,
                   maxBedrooms: {
-                    $max: '$bedrooms',
+                    $max: "$bedrooms"
                   },
                   minBedrooms: {
-                    $min: '$bedrooms',
+                    $min: "$bedrooms"
                   },
                   maxBathrooms: {
-                    $max: '$bathrooms',
+                    $max: "$bathrooms"
                   },
                   minBathrooms: {
-                    $min: '$bathrooms',
-                  },
-                },
+                    $min: "$bathrooms"
+                  }
+                }
               },
               {
                 $project: {
-                  _id: 0,
-                },
-              },
+                  _id: 0
+                }
+              }
             ],
-            as: 'unitDetails',
-          },
+            as: "unitDetails"
+          }
         },
         {
           $unwind: {
-            path: '$unitDetails',
-            preserveNullAndEmptyArrays: true,
-          },
+            path: "$unitDetails",
+            preserveNullAndEmptyArrays: true
+          }
         },
         {
           $lookup: {
-            from: 'property-units',
+            from: "property-units",
             let: {
-              propertyId: '$_id',
+              propertyId: "$_id"
             },
             pipeline: [
               {
@@ -127,36 +127,36 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: ['$propertyId', '$$propertyId'],
+                        $eq: ["$propertyId", "$$propertyId"]
                       },
                       {
-                        $in: ['$status', ['occupied', 'unlisted']],
-                      },
-                    ],
-                  },
-                },
-              },
+                        $in: ["$status", ["occupied", "unlisted"]]
+                      }
+                    ]
+                  }
+                }
+              }
             ],
-            as: 'unavailbleUnits',
-          },
+            as: "unavailbleUnits"
+          }
         },
         {
           $addFields: {
-            'unitDetails.unavailable': {
-              $size: '$unavailbleUnits',
+            "unitDetails.unavailable": {
+              $size: "$unavailbleUnits"
             },
-            'unitDetails.bedrooms.max': '$unitDetails.maxBedrooms',
-            'unitDetails.bedrooms.min': '$unitDetails.minBedrooms',
-            'unitDetails.bathrooms.max': '$unitDetails.maxBathrooms',
-            'unitDetails.bathrooms.min': '$unitDetails.minBathrooms',
-          },
+            "unitDetails.bedrooms.max": "$unitDetails.maxBedrooms",
+            "unitDetails.bedrooms.min": "$unitDetails.minBedrooms",
+            "unitDetails.bathrooms.max": "$unitDetails.maxBathrooms",
+            "unitDetails.bathrooms.min": "$unitDetails.minBathrooms"
+          }
         },
         {
           $addFields: {
-            'unitDetails.available': {
-              $subtract: ['$units', '$unitDetails.unavailable'],
-            },
-          },
+            "unitDetails.available": {
+              $subtract: ["$units", "$unitDetails.unavailable"]
+            }
+          }
         },
         // {
         //     "$match": {
@@ -167,15 +167,15 @@ export const getPropertiesAggregation = ({ images, unitDetails }) => {
         // },
         {
           $project: {
-            'unitDetails.maxBathrooms': 0,
-            'unitDetails.minBathrooms': 0,
-            'unitDetails.maxBedrooms': 0,
-            'unitDetails.minBedrooms': 0,
-            'unitDetails.unavailable': 0,
-            unavailbleUnits: 0,
-          },
-        },
-      ],
+            "unitDetails.maxBathrooms": 0,
+            "unitDetails.minBathrooms": 0,
+            "unitDetails.maxBedrooms": 0,
+            "unitDetails.minBedrooms": 0,
+            "unitDetails.unavailable": 0,
+            unavailbleUnits: 0
+          }
+        }
+      ]
     );
   }
 

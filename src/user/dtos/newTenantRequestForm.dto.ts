@@ -1,9 +1,9 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import { E164Number } from 'libphonenumber-js/min';
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { E164Number } from "libphonenumber-js/min";
 
 @InputType()
 export class NewTenantRequestFormDTO {
-  @Field(() => String, { nullable: true, defaultValue: '' })
+  @Field(() => String, { nullable: true, defaultValue: "" })
   additionalInfo: string;
   @Field(() => String)
   firstName: string;

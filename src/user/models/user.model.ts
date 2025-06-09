@@ -1,6 +1,6 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ERoles } from '../enums/roles.enum';
-import { EStatus } from '../enums/status.enum';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { ERoles } from "../enums/roles.enum";
+import { EStatus } from "../enums/status.enum";
 
 @ObjectType()
 export class UserModel {

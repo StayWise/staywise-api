@@ -1,4 +1,4 @@
-import { EUnitStatus } from '../enums/unit-status.enum';
+import { EUnitStatus } from "../enums/unit-status.enum";
 
 export interface IPropertyUnit {
   bathrooms: number;

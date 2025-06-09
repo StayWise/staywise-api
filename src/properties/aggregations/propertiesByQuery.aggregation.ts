@@ -1,4 +1,4 @@
-import { getPropertiesAggregation } from './properties.aggregation';
+import { getPropertiesAggregation } from "./properties.aggregation";
 
 interface IPropertyAggregationOptions {
   query?: string;
@@ -7,36 +7,36 @@ interface IPropertyAggregationOptions {
 }
 
 export const propertiesByQueryAggregation = ({
-  query = '',
+  query = "",
   images = false,
-  unitDetails = false,
+  unitDetails = false
 }: IPropertyAggregationOptions) => {
   const pipeline = [];
 
   if (query) {
     pipeline.push({
       $search: {
-        index: 'property-search',
+        index: "property-search",
         compound: {
           should: [
             {
               text: {
                 query,
                 path: {
-                  wildcard: '*',
-                },
-              },
+                  wildcard: "*"
+                }
+              }
             },
             {
               autocomplete: {
-                path: 'address.description',
-                query,
-              },
-            },
+                path: "address.description",
+                query
+              }
+            }
           ],
-          minimumShouldMatch: 1,
-        },
-      },
+          minimumShouldMatch: 1
+        }
+      }
     });
   }
 

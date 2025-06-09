@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
-import { AddressSchema } from 'src/properties/schemas/properties.schema';
-import { EMeetFormStatus } from '../enums/meet-form-status.enum';
+import * as mongoose from "mongoose";
+import { AddressSchema } from "src/properties/schemas/properties.schema";
+import { EMeetFormStatus } from "../enums/meet-form-status.enum";
 
 const TenantRequestSchema = new mongoose.Schema(
   {
@@ -12,11 +12,11 @@ const TenantRequestSchema = new mongoose.Schema(
     propertyId: { type: mongoose.Types.ObjectId, required: true },
     requiredBy: { type: Date, required: true },
     additionalInfo: { type: String, required: false, default: null },
-    status: { type: String, required: true, default: EMeetFormStatus.OPEN },
+    status: { type: String, required: true, default: EMeetFormStatus.OPEN }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 export { TenantRequestSchema };

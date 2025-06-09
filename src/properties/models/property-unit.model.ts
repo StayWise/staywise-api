@@ -1,5 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { EUnitStatus } from '../enums/unit-status.enum';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { EUnitStatus } from "../enums/unit-status.enum";
 
 @ObjectType()
 export class PropertyUnitModel {

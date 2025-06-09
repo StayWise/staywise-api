@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { EStatus } from '../enums/status.enum';
+import * as mongoose from "mongoose";
+import { EStatus } from "../enums/status.enum";
 
 const UserSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   pass: { type: String, required: true },
   status: { type: String, required: true, default: EStatus.ACTIVE },
-  roles: { type: [String], required: true },
+  roles: { type: [String], required: true }
 });
 
 UserSchema.index({ email: 1 }, { unique: true });

@@ -2,40 +2,40 @@ export const propertiesGroupedByStateAggregation = () => {
   return [
     {
       $group: {
-        _id: '$address.region',
+        _id: "$address.region",
         cities: {
-          $addToSet: '$address.city',
+          $addToSet: "$address.city"
         },
         propertyIds: {
-          $addToSet: '$_id',
-        },
-      },
+          $addToSet: "$_id"
+        }
+      }
     },
     {
       $lookup: {
-        from: 'property-photos',
+        from: "property-photos",
         let: {
-          propertyIds: '$propertyIds',
+          propertyIds: "$propertyIds"
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $in: ['$propertyId', '$$propertyIds'],
-              },
-            },
+                $in: ["$propertyId", "$$propertyIds"]
+              }
+            }
           },
           {
-            $limit: 3,
-          },
+            $limit: 3
+          }
         ],
-        as: 'images',
-      },
+        as: "images"
+      }
     },
     {
       $sort: {
-        _id: 1,
-      } as any,
-    },
+        _id: 1
+      } as any
+    }
   ];
 };

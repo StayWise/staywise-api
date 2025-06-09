@@ -1,6 +1,6 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import { ERoles } from 'src/user/enums/roles.enum';
-import { EStatus } from 'src/user/enums/status.enum';
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { ERoles } from "src/user/enums/roles.enum";
+import { EStatus } from "src/user/enums/status.enum";
 
 @InputType()
 export class IEditAdminDTO {

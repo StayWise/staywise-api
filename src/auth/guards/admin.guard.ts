@@ -1,16 +1,16 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { JwtService } from '@nestjs/jwt';
-import { ERoles } from 'src/user/enums/roles.enum';
-import { EStatus } from 'src/user/enums/status.enum';
-import { IUser } from 'src/user/interfaces/user.interface';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { GqlExecutionContext } from "@nestjs/graphql";
+import { JwtService } from "@nestjs/jwt";
+import { ERoles } from "src/user/enums/roles.enum";
+import { EStatus } from "src/user/enums/status.enum";
+import { IUser } from "src/user/interfaces/user.interface";
+import { UserRepository } from "src/user/repositories/user.repository";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

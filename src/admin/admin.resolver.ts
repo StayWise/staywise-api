@@ -4,21 +4,22 @@ import {
   GraphQLExecutionContext,
   Mutation,
   Query,
-  Resolver,
-} from '@nestjs/graphql';
-import { ICreateAdminDTO } from './dtos/createAdmin.dto';
-import { ILoginAdminDTO } from './dtos/loginAdmin.dto';
-import { LoginAdminModel } from './models/login-admin.model';
-import { AdminService } from './services/admin.service';
-import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import { AdminModel } from './models/admin.model';
-import { IEditAdminDTO } from './dtos/editAdmin.dto';
-import { UseGuards } from '@nestjs/common';
-import { RootGuard } from 'src/auth/guards/root.guard';
-import config from 'src/config';
+  Resolver
+} from "@nestjs/graphql";
+import { ICreateAdminDTO } from "./dtos/createAdmin.dto";
+import { ILoginAdminDTO } from "./dtos/loginAdmin.dto";
+import { LoginAdminModel } from "./models/login-admin.model";
+import { AdminService } from "./services/admin.service";
+import { AdminModel } from "./models/admin.model";
+import { IEditAdminDTO } from "./dtos/editAdmin.dto";
+import { UseGuards } from "@nestjs/common";
+import { RootGuard } from "src/auth/guards/root.guard";
+import config from "src/config";
 
-import momentType from 'moment';
-const moment: typeof momentType = require('moment');
+import momentType from "moment";
+import { FileUpload } from "graphql-upload/processRequest.mjs";
+import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
+const moment: typeof momentType = require("moment");
 
 @Resolver(() => AdminModel)
 export class AdminResolver {
@@ -27,31 +28,31 @@ export class AdminResolver {
   @Mutation(() => LoginAdminModel)
   async loginAdmin(
     @Context() ctx: GraphQLExecutionContext,
-    @Args('input') input: ILoginAdminDTO,
+    @Args("input") input: ILoginAdminDTO
   ): Promise<LoginAdminModel> {
     const { accessToken, ...user } = await this.adminService.loginAdmin(input);
     const res = (ctx as any).req.res;
 
     const expires = input.remember
-      ? moment().add(config.jwt.jwtExpire, 'seconds').toDate()
+      ? moment().add(config.jwt.jwtExpire, "seconds").toDate()
       : undefined;
     const domain =
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV === "production"
         ? `.${config.domain}`
         : config.domain;
 
-    res.cookie('access_token', accessToken, {
+    res.cookie("access_token", accessToken, {
       expires,
-      sameSite: 'none',
+      sameSite: "none",
       httpOnly: true,
       secure: true,
-      domain,
+      domain
     });
-    res.cookie('has_access', true, {
+    res.cookie("has_access", true, {
       secure: true,
-      sameSite: 'none',
+      sameSite: "none",
       expires,
-      domain,
+      domain
     });
 
     return user;
@@ -60,9 +61,9 @@ export class AdminResolver {
   @UseGuards(RootGuard)
   @Mutation(() => Boolean, { nullable: true })
   async createAdmin(
-    @Args({ name: 'file', type: () => GraphQLUpload, nullable: true })
+    @Args({ name: "file", type: () => GraphQLUpload, nullable: true })
     { createReadStream }: FileUpload,
-    @Args('input') input: ICreateAdminDTO,
+    @Args("input") input: ICreateAdminDTO
   ): Promise<boolean> {
     const stream = createReadStream();
     await this.adminService.createAdmin(stream, input);
@@ -71,7 +72,7 @@ export class AdminResolver {
 
   @UseGuards(RootGuard)
   @Mutation(() => Boolean)
-  async editAdmin(@Args('input') input: IEditAdminDTO): Promise<boolean> {
+  async editAdmin(@Args("input") input: IEditAdminDTO): Promise<boolean> {
     await this.adminService.editAdmin(input);
     return true;
   }

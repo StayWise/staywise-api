@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
-import config from '../../config';
-const AWS = require('aws-sdk');
-const stream = require('stream');
+import { Injectable } from "@nestjs/common";
+import { FileUpload } from "graphql-upload/processRequest.mjs";
+import config from "../../config";
+const AWS = require("aws-sdk");
+const stream = require("stream");
 
 AWS.config.update({ region: config?.aws?.s3?.region });
 const s3 = new AWS.S3({
   apiVersion: config?.aws?.s3?.apiVersion,
   accessKeyId: config?.aws?.default?.accessKeyId,
-  secretAccessKey: config?.aws?.default?.secretAccessKey,
+  secretAccessKey: config?.aws?.default?.secretAccessKey
 });
 
 @Injectable()
@@ -16,10 +16,10 @@ export class S3Service {
   constructor() {}
 
   async getSignedObjectURL({ key, bucket, expires = 900 }) {
-    const signedUrl = s3.getSignedUrl('getObject', {
+    const signedUrl = s3.getSignedUrl("getObject", {
       Key: key,
       Bucket: bucket,
-      Expires: expires,
+      Expires: expires
     });
 
     return signedUrl;
@@ -30,7 +30,7 @@ export class S3Service {
     var params = {
       Bucket: bucketName,
       Key: key ?? objectKey,
-      Body: file.buffer,
+      Body: file.buffer
     };
 
     const upload = await new Promise((resolve, reject) => {
@@ -54,11 +54,11 @@ export class S3Service {
       Bucket: bucketName,
       Key: objectKey,
       Body: pass,
-      ACL: 'public-read',
+      ACL: "public-read"
     };
     return {
       writeStream: pass,
-      promise: s3.upload(params).promise(),
+      promise: s3.upload(params).promise()
     };
   }
 
@@ -69,7 +69,7 @@ export class S3Service {
       Bucket: bucketName,
       Key: objectKey,
       Body: file.buffer,
-      ACL: 'public-read',
+      ACL: "public-read"
     };
 
     const upload = await new Promise((resolve, reject) => {

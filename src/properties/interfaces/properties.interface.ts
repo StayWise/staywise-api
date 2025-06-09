@@ -1,4 +1,4 @@
-import { IAddress } from './address.interface';
+import { IAddress } from "./address.interface";
 
 export interface IProperty {
   portfolioId: string;

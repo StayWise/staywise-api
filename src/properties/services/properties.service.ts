@@ -1,21 +1,21 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
-import config from '../../config';
-import { ES3Buckets } from 'src/aws/enums/s3Buckets.enum';
-import { S3Service } from 'src/aws/services/s3.service';
-import { CreatePropertyDTO } from '../dtos/create-property.dto';
-import { PropertiesRepository } from '../repositories/properties.repository';
-import { IPropertyPhoto } from '../interfaces/property-photos.interface';
-import * as Sharp from 'sharp';
-import { UpdateUnitDTO } from '../dtos/update-unit.dto';
-import { ConnectionArguments } from 'src/graphql/Connection';
-import { EditPropertyDTO } from '../dtos/edit-property.dto';
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import config from "../../config";
+import { ES3Buckets } from "src/aws/enums/s3Buckets.enum";
+import { S3Service } from "src/aws/services/s3.service";
+import { CreatePropertyDTO } from "../dtos/create-property.dto";
+import { PropertiesRepository } from "../repositories/properties.repository";
+import { IPropertyPhoto } from "../interfaces/property-photos.interface";
+import * as Sharp from "sharp";
+import { UpdateUnitDTO } from "../dtos/update-unit.dto";
+import { ConnectionArguments } from "src/graphql/Connection";
+import { EditPropertyDTO } from "../dtos/edit-property.dto";
+import { FileUpload } from "graphql-upload/processRequest.mjs";
 
 @Injectable()
 export class PropertiesService {
   constructor(
     private readonly propertiesRepo: PropertiesRepository,
-    private readonly s3Service: S3Service,
+    private readonly s3Service: S3Service
   ) {}
 
   async create(files: FileUpload[], input: CreatePropertyDTO) {
@@ -23,7 +23,7 @@ export class PropertiesService {
     if (!type) type = await this.propertiesRepo.createType(input.type);
 
     let portfolio = await this.propertiesRepo.findPortfolioByQuery(
-      input.portfolio,
+      input.portfolio
     );
     if (!portfolio)
       portfolio = await this.propertiesRepo.createPortfolio(input.portfolio);
@@ -33,7 +33,7 @@ export class PropertiesService {
       typeId: type._id,
       address: input.address,
       units: input.units,
-      managerIds: input.managerIds,
+      managerIds: input.managerIds
     });
 
     await this.addPropertyPhotos(files, property._id.toString());
@@ -46,7 +46,7 @@ export class PropertiesService {
     if (!type) type = await this.propertiesRepo.createType(input.type);
 
     let portfolio = await this.propertiesRepo.findPortfolioByQuery(
-      input.portfolio,
+      input.portfolio
     );
     if (!portfolio)
       portfolio = await this.propertiesRepo.createPortfolio(input.portfolio);
@@ -54,7 +54,7 @@ export class PropertiesService {
     const property = await this.propertiesRepo.editProperty(input.id, {
       portfolioId: portfolio._id,
       typeId: type._id,
-      managerIds: input.managerIds,
+      managerIds: input.managerIds
     });
 
     return property;
@@ -64,7 +64,7 @@ export class PropertiesService {
     try {
       const { keys = [] } = await this.propertiesRepo.getPropertyPhotoKeys(
         photoIds,
-        propertyId,
+        propertyId
       );
       const bucket = config.aws.s3.buckets[ES3Buckets.PROPERTY_PHOTOS];
       let deletedKeys = await Promise.all(
@@ -73,15 +73,15 @@ export class PropertiesService {
             .deleteObject(bucket, key)
             .catch(() => null);
           return !!response ? key : null;
-        }),
+        })
       );
       deletedKeys = deletedKeys.filter((key) => !!key);
       await this.propertiesRepo.deletePropertyPhotosByKey(
         deletedKeys,
-        propertyId,
+        propertyId
       );
     } catch {
-      throw new InternalServerErrorException('Failed to Delete Photos');
+      throw new InternalServerErrorException("Failed to Delete Photos");
     }
   }
 
@@ -102,7 +102,7 @@ export class PropertiesService {
         });
         if (!upload) return null;
         return upload;
-      }),
+      })
     );
 
     const photos = photosResponse
@@ -113,8 +113,8 @@ export class PropertiesService {
           url: uploadObject.Location,
           key: uploadObject.Key,
           bucket: uploadObject.Bucket,
-          propertyId: propertyId,
-        }),
+          propertyId: propertyId
+        })
       );
 
     await this.propertiesRepo.createPropertyPhotos(photos);

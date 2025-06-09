@@ -1,5 +1,5 @@
-import { IAddress } from 'src/properties/interfaces/address.interface';
-import { EMeetFormStatus } from '../enums/meet-form-status.enum';
+import { IAddress } from "src/properties/interfaces/address.interface";
+import { EMeetFormStatus } from "../enums/meet-form-status.enum";
 
 export interface ITenantRequest {
   address: IAddress;

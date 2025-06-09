@@ -1,26 +1,26 @@
 export const getRentalRequestsAggregation = () => {
   return [
     {
-      $match: {},
+      $match: {}
     },
     {
       $lookup: {
-        from: 'properties',
-        localField: 'propertyId',
-        foreignField: '_id',
-        as: 'property',
-      },
+        from: "properties",
+        localField: "propertyId",
+        foreignField: "_id",
+        as: "property"
+      }
     },
     {
       $unwind: {
-        path: '$property',
-        preserveNullAndEmptyArrays: true,
-      },
+        path: "$property",
+        preserveNullAndEmptyArrays: true
+      }
     },
     {
       $sort: {
-        createdAt: -1,
-      },
-    } as any,
+        createdAt: -1
+      }
+    } as any
   ];
 };

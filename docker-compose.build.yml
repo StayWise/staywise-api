@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   prod:
@@ -36,8 +36,8 @@ services:
     depends_on:
       - prod
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
     build:
       context: ./nginx
 networks:
