@@ -1,21 +1,18 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import config from "../../config";
-import { ES3Buckets } from "src/aws/enums/s3Buckets.enum";
-import { S3Service } from "src/aws/services/s3.service";
-import { CreatePropertyDTO } from "../dtos/create-property.dto";
-import { PropertiesRepository } from "../repositories/properties.repository";
-import { IPropertyPhoto } from "../interfaces/property-photos.interface";
-import * as Sharp from "sharp";
-import { UpdateUnitDTO } from "../dtos/update-unit.dto";
-import { ConnectionArguments } from "src/graphql/Connection";
-import { EditPropertyDTO } from "../dtos/edit-property.dto";
 import { FileUpload } from "graphql-upload/processRequest.mjs";
+import { CloudinaryService } from "src/cloudinary/services/cloudinary.service";
+import { ConnectionArguments } from "src/graphql/Connection";
+import { CreatePropertyDTO } from "../dtos/create-property.dto";
+import { EditPropertyDTO } from "../dtos/edit-property.dto";
+import { UpdateUnitDTO } from "../dtos/update-unit.dto";
+import { IPropertyPhoto } from "../interfaces/property-photos.interface";
+import { PropertiesRepository } from "../repositories/properties.repository";
 
 @Injectable()
 export class PropertiesService {
   constructor(
     private readonly propertiesRepo: PropertiesRepository,
-    private readonly s3Service: S3Service
+    private readonly cloudinaryService: CloudinaryService
   ) {}
 
   async create(files: FileUpload[], input: CreatePropertyDTO) {
@@ -62,45 +59,36 @@ export class PropertiesService {
 
   async deletePropertyPhotos(photoIds: string[], propertyId: string) {
     try {
-      const { keys = [] } = await this.propertiesRepo.getPropertyPhotoKeys(
-        photoIds,
+      const photos = await this.propertiesRepo.getPropertyPhotosByPropertyId(
         propertyId
       );
-      const bucket = config.aws.s3.buckets[ES3Buckets.PROPERTY_PHOTOS];
-      let deletedKeys = await Promise.all(
-        keys.map(async (key: string) => {
-          const response = await this.s3Service
-            .deleteObject(bucket, key)
-            .catch(() => null);
-          return !!response ? key : null;
+
+      await Promise.all(
+        photos.map(async (photo: any) => {
+          if (photoIds.includes(photo._id.toString())) {
+            await this.cloudinaryService
+              .deleteFile(photo.publicId)
+              .catch(() => null);
+          }
         })
       );
-      deletedKeys = deletedKeys.filter((key) => !!key);
-      await this.propertiesRepo.deletePropertyPhotosByKey(
-        deletedKeys,
-        propertyId
-      );
+
+      await this.propertiesRepo.deletePropertyPhotosById(photoIds, propertyId);
     } catch {
       throw new InternalServerErrorException("Failed to Delete Photos");
     }
   }
 
   async addPropertyPhotos(files: FileUpload[], propertyId: string) {
-    const bucket = config.aws.s3.buckets[ES3Buckets.PROPERTY_PHOTOS];
     const photosResponse = await Promise.all(
       files.map(async (file) => {
         const fileObject = await file;
-        const stream = fileObject.createReadStream();
-        const sharpGraphicProccessor = Sharp();
-        stream.pipe(sharpGraphicProccessor);
-        const { writeStream, promise } =
-          this.s3Service.uploadStreamAsPublicObject(bucket, fileObject);
-        sharpGraphicProccessor.webp().pipe(writeStream);
-        const upload = await promise.catch((e) => {
-          console.log(e);
-          return null;
-        });
-        if (!upload) return null;
+        const upload = await this.cloudinaryService
+          .uploadStream(fileObject, "properties")
+          .catch((e) => {
+            console.log(e);
+            return null;
+          });
         return upload;
       })
     );
@@ -109,10 +97,8 @@ export class PropertiesService {
       .filter((e) => !!e)
       .map(
         (uploadObject): IPropertyPhoto => ({
-          eTag: uploadObject.ETag,
-          url: uploadObject.Location,
-          key: uploadObject.Key,
-          bucket: uploadObject.Bucket,
+          publicId: uploadObject.publicId,
+          url: uploadObject.secureUrl,
           propertyId: propertyId
         })
       );

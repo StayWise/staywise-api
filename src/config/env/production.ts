@@ -1,5 +1,3 @@
-import { ES3Buckets } from "src/aws/enums/s3Buckets.enum";
-
 export {};
 
 require("dotenv").config();
@@ -12,20 +10,6 @@ const config = {
   jwt: {
     jwtSecret: process.env.JWT_SECRET,
     jwtExpire: 60 * 60 * 24 * 30
-  },
-  aws: {
-    s3: {
-      region: process.env.AWS_DEFAULT_REGION,
-      apiVersion: "2006-03-01",
-      buckets: {
-        [ES3Buckets.PROPERTY_PHOTOS]: "staywise-property-photos-prod"
-      }
-    },
-    default: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_DEFAULT_REGION
-    }
   },
   google: {
     placesAPI: {
@@ -41,6 +25,11 @@ const config = {
     key: process.env.SENDGRID_API_KEY,
     from: "noreply@staywiserent.com",
     to: "contact@staywiserent.com"
+  },
+  cloudinary: {
+    cloudName: "staywiserent-cloud",
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET
   },
   port: process.env.PORT || 3000,
   origin: {

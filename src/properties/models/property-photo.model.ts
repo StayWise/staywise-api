@@ -7,11 +7,7 @@ export class PropertyPhoto {
   @Field(() => ID)
   propertyId: string;
   @Field(() => String)
-  eTag: string;
+  publicId: string;
   @Field(() => String)
   url: string;
-  @Field(() => String)
-  key: string;
-  @Field(() => String)
-  bucket: string;
 }

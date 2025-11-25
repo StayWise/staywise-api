@@ -1,9 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import * as mongoose from "mongoose";
 import { Model } from "mongoose";
+import { ConnectionArguments } from "src/graphql/Connection";
+import { RelayRepositry } from "src/graphql/relay.repository";
+import { getPropertiesAggregation } from "../aggregations/properties.aggregation";
 import { propertiesByQueryAggregation } from "../aggregations/propertiesByQuery.aggregation";
-import { propertiesSearchQueryAggregation } from "../aggregations/propertiesSearchQuery.aggregation";
 import { propertiesGroupedByStateAggregation } from "../aggregations/propertiesGroupedByState.aggregation";
+import { propertiesSearchQueryAggregation } from "../aggregations/propertiesSearchQuery.aggregation";
 import { propertyPortfoliosAggregation } from "../aggregations/property-portfolios.aggregation";
 import { propertyTypesAggregation } from "../aggregations/property-types.aggregation";
 import { IProperty } from "../interfaces/properties.interface";
@@ -11,10 +15,6 @@ import { IPropertyPhoto } from "../interfaces/property-photos.interface";
 import { IPropertyPortfolio } from "../interfaces/property-portfolio.interface";
 import { IPropertyTypes } from "../interfaces/property-type.interface";
 import { IPropertyUnit } from "../interfaces/property-unit.interface";
-import * as mongoose from "mongoose";
-import { getPropertiesAggregation } from "../aggregations/properties.aggregation";
-import { RelayRepositry } from "src/graphql/relay.repository";
-import { ConnectionArguments } from "src/graphql/Connection";
 
 @Injectable()
 export class PropertiesRepository extends RelayRepositry<IProperty> {
@@ -76,6 +76,13 @@ export class PropertiesRepository extends RelayRepositry<IProperty> {
   public async deletePropertyPhotosByKey(keys: string[], propertyId) {
     return await this.propertyPhotosModel.deleteMany({
       key: { $in: keys },
+      propertyId
+    });
+  }
+
+  public async deletePropertyPhotosById(photoIds: string[], propertyId: string) {
+    return await this.propertyPhotosModel.deleteMany({
+      _id: { $in: photoIds.map((id) => new mongoose.Types.ObjectId(id)) },
       propertyId
     });
   }

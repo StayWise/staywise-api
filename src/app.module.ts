@@ -10,7 +10,6 @@ import { UserModule } from "./user/user.module";
 import { AdminModule } from "./admin/admin.module";
 import { JwtModule } from "@nestjs/jwt";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
-import { AWSModule } from "./aws/aws.module";
 import { GCPModule } from "./gcp/gcp.module";
 import { PropertiesModule } from "./properties/properties.module";
 import { SendgridModule } from "./sendgrid/sendgrid.module";
@@ -41,7 +40,6 @@ const isDevelopment =
     AuthModule,
     UserModule,
     AdminModule,
-    AWSModule,
     GCPModule,
     PropertiesModule,
     SendgridModule
